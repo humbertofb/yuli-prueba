@@ -40,3 +40,46 @@ video {
     margin-left: auto;
     margin-right: auto;
 }
+
+/* Videos */
+#videos {
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.video-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.video-item {
+    margin: 10px;
+    width: 300px;
+    text-align: left;
+}
+
+video {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Frases */
+#frases {
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.frase-item {
+    background-color: #ffeb3b;
+    margin: 10px;
+    padding: 20px;
+    border-radius: 10px;
+    font-size: 18px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
