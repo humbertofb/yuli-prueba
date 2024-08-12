@@ -9,3 +9,7 @@ document.body.addEventListener('click', function(e) {
         menu.style.display = 'none';
     }
 });
+
+function scrollToPoem() {
+    document.getElementById('poem').scrollIntoView({ behavior: 'smooth' });
+}
