@@ -3,29 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web para mi novia</title>
+    <title>Para Mi Amor</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <h1>Para mi querida novia</h1>
-        <div class="menu-icon" id="menuIcon">&#9776;</div> <!-- Botón de menú -->
-        <nav id="menu">
-            <ul>
-                <li><a href="index.html">Inicio</a></li>
-                <li><a href="frases.html">Frases</a></li>
-            </ul>
-        </nav>
+        <h1>Para Mi Amor</h1>
+        <div class="menu-icon" id="menu-icon">&#9776;</div>
     </header>
-    <main>
-        <section id="welcome">
-            <p>Hola, amor. Esta página es solo para ti, hecha con todo mi cariño a la distancia.</p>
-            <button id="surpriseBtn">¡Haz clic aquí para una sorpresa!</button>
-        </section>
-    </main>
-    <footer>
-        <p>Con amor, tu [Tu Nombre]</p>
-    </footer>
+
+    <!-- Menú desplegable -->
+    <nav id="menu">
+        <a href="#welcome">Inicio</a>
+        <a href="#poem">Poema</a>
+        <a href="#timeline">Cuenta Regresiva</a>
+        <a href="#messages">Mensajes</a>
+        <a href="#memories">Memorias</a>
+        <a href="videos.html">Videos</a>
+        <a href="frases.html">Frases</a>
+    </nav>
+
+    <!-- Página Principal -->
+    <section id="welcome">
+        <img src="imagenes/romantica.jpg" alt="Imagen Romántica">
+        <p>Bienvenida a nuestro espacio especial. Aquí puedes explorar nuestros recuerdos y escribir nuevos capítulos juntos.</p>
+        <button onclick="scrollToPoem()">Comenzar</button>
+    </section>
+
+    <section id="poem">
+        <h2>Un Poema Para Ti</h2>
+        <p>"Eres la luz en mi vida, la razón de mi alegría..."</p>
+    </section>
+
+    <section id="timeline">
+        <h2>Nuestra Cuenta Regresiva</h2>
+        <div id="countdown"></div>
+    </section>
+
+    <section id="messages">
+        <h2>Mensajes de Amor</h2>
+        <form id="messageForm">
+            <textarea id="message" placeholder="Escribe un mensaje..."></textarea>
+            <button type="submit">Enviar</button>
+        </form>
+        <div id="messageDisplay"></div>
+    </section>
+
+    <section id="memories">
+        <h2>Nuestras Memorias</h2>
+        <div class="carousel">
+            <!-- Aquí irán las imágenes y videos -->
+        </div>
+    </section>
+
     <script src="scripts.js"></script>
 </body>
 </html>
