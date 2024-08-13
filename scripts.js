@@ -50,7 +50,7 @@ function startCountdown(targetDate) {
 }
 
 // Ejemplo: Fecha objetivo
-const targetDate = new Date("Dec 31, 2024 23:59:59").getTime();
+const targetDate = new Date("Jun 10, 2025 11:30:20").getTime();
 startCountdown(targetDate);
 
 // Enviar Mensajes
