@@ -1,3 +1,6 @@
+import { db } from './firebase-config.js';
+import { collection, addDoc, query, where, getDocs, onSnapshot } from "firebase/firestore";
+
 document.addEventListener('DOMContentLoaded', function () {
     const newNoteBtn = document.getElementById('new-note-btn');
     const noteModal = document.getElementById('note-modal');
@@ -8,21 +11,30 @@ document.addEventListener('DOMContentLoaded', function () {
     const notesContainer = document.getElementById('notes-container');
     const notification = document.getElementById('notification');
 
-    // Cargar notas desde localStorage
-    function loadNotes() {
-        const notes = JSON.parse(localStorage.getItem('notes')) || [];
-        const today = new Date().toLocaleDateString('en-CA'); // Formato YYYY-MM-DD
-        notesContainer.innerHTML = '';
+    const notesRef = collection(db, "notes");
 
-        notes.forEach(note => {
-            if (note.date <= today) {
+    // Cargar notas desde Firestore
+    function loadNotes() {
+        const today = new Date().toISOString().split('T')[0]; // Formato YYYY-MM-DD
+        const q = query(notesRef, where("date", "<=", today));
+
+        onSnapshot(q, (querySnapshot) => {
+            notesContainer.innerHTML = '';
+            querySnapshot.forEach((doc) => {
+                const note = doc.data();
                 const noteElement = document.createElement('div');
                 noteElement.classList.add('note');
                 noteElement.textContent = `${note.text} (Publicada el: ${note.date})`;
                 notesContainer.appendChild(noteElement);
-            } else {
-                notification.classList.remove('hidden');
-            }
+            });
+
+            // Notificación de nuevas notas futuras
+            const futureNotesQuery = query(notesRef, where("date", ">", today));
+            getDocs(futureNotesQuery).then(snapshot => {
+                if (!snapshot.empty) {
+                    notification.classList.remove('hidden');
+                }
+            });
         });
     }
 
@@ -36,20 +48,22 @@ document.addEventListener('DOMContentLoaded', function () {
         noteModal.style.display = 'none';
     });
 
-    // Guardar la nueva nota
-    saveNoteBtn.addEventListener('click', function () {
+    // Guardar la nueva nota en Firestore
+    saveNoteBtn.addEventListener('click', async function () {
         const note = {
             text: noteText.value,
             date: noteDate.value
         };
 
-        const notes = JSON.parse(localStorage.getItem('notes')) || [];
-        notes.push(note);
-        localStorage.setItem('notes', JSON.stringify(notes));
-        loadNotes();
-        noteModal.style.display = 'none';
-        noteText.value = '';  // Limpiar el textarea
-        noteDate.value = '';  // Limpiar el campo de fecha
+        try {
+            await addDoc(notesRef, note);
+            loadNotes();
+            noteModal.style.display = 'none';
+            noteText.value = '';  // Limpiar el textarea
+            noteDate.value = '';  // Limpiar el campo de fecha
+        } catch (e) {
+            console.error("Error al agregar el documento: ", e);
+        }
     });
 
     // Cargar notas al iniciar
