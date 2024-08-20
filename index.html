@@ -7,39 +7,27 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="auth-container" class="auth-container">
-        <h2>Acceso</h2>
-        <input type="password" id="password-input" placeholder="Introduce la contraseña">
-        <button id="login-btn">Ingresar</button>
-        <p id="auth-error" class="auth-error"></p>
-    </div>
-
-    <div id="app-container" class="container hidden">
-        <h1>Mis Notas para Ti</h1>
-        <div class="notebook">
-            <div class="notebook-header">
-                <button id="new-note-btn">Agregar Nota</button>
-                <span id="notification" class="notification hidden">Nueva nota disponible</span>
-            </div>
-            <div id="notes-container" class="notes-container">
-                <!-- Aquí se mostrarán las notas -->
-            </div>
+    <header>
+        <h1>Notas Diarias para Mi Amor</h1>
+    </header>
+    <main>
+        <div id="note-container">
+            <!-- Aquí se mostrarán las notas -->
         </div>
-    </div>
-
-    <!-- Modal para agregar nueva nota -->
-    <div id="note-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <h2>Nueva Nota</h2>
-            <textarea id="note-text" placeholder="Escribe tu nota aquí..."></textarea>
-            <label for="note-date">Fecha de publicación:</label>
-            <input type="date" id="note-date" value="">
-            <button id="save-note-btn">Guardar Nota</button>
+        <div id="navigation">
+            <button id="prev">Anterior</button>
+            <button id="next">Siguiente</button>
         </div>
-    </div>
-
-    <script src="auth.js"></script>
-    <script src="scripts.js"></script>
+        <div id="reactions">
+            <button class="reaction">❤️ Me encanta</button>
+            <button class="reaction">😂 Me hizo reír</button>
+            <button class="reaction">🥰 Qué tierno</button>
+        </div>
+        <div id="response">
+            <textarea id="response-text" placeholder="Escribe tu respuesta aquí..."></textarea>
+            <button id="send-response">Enviar</button>
+        </div>
+    </main>
+    <script src="app.js"></script>
 </body>
 </html>
