@@ -1,67 +1,64 @@
-// Mostrar/Ocultar el Menú
-document.getElementById('menu-icon').addEventListener('click', function() {
-    const menu = document.getElementById('menu');
-    menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
-});
+document.addEventListener('DOMContentLoaded', function () {
+    const newNoteBtn = document.getElementById('new-note-btn');
+    const noteModal = document.getElementById('note-modal');
+    const closeBtn = document.querySelector('.close-btn');
+    const saveNoteBtn = document.getElementById('save-note-btn');
+    const noteText = document.getElementById('note-text');
+    const noteDate = document.getElementById('note-date');
+    const notesContainer = document.getElementById('notes-container');
+    const notification = document.getElementById('notification');
 
-// Cerrar el Menú al hacer clic fuera del menú o al seleccionar un enlace
-document.body.addEventListener('click', function(e) {
-    const menu = document.getElementById('menu');
-    if (menu.style.display === 'block' && !e.target.closest('#menu') && !e.target.closest('#menu-icon')) {
-        menu.style.display = 'none';
+    // Cargar notas desde localStorage
+    function loadNotes() {
+        const notes = JSON.parse(localStorage.getItem('notes')) || [];
+        const today = new Date().toLocaleDateString('en-CA'); // Formato YYYY-MM-DD
+        notesContainer.innerHTML = '';
+
+        notes.forEach(note => {
+            if (note.date <= today) {
+                const noteElement = document.createElement('div');
+                noteElement.classList.add('note');
+                noteElement.textContent = `${note.text} (Publicada el: ${note.date})`;
+                notesContainer.appendChild(noteElement);
+            } else {
+                notification.classList.remove('hidden');
+            }
+        });
     }
-});
 
-// Cerrar el menú al seleccionar un enlace
-document.querySelectorAll('#menu a').forEach(link => {
-    link.addEventListener('click', () => {
-        document.getElementById('menu').style.display = 'none';
+    // Abrir el modal para agregar una nueva nota
+    newNoteBtn.addEventListener('click', function () {
+        noteModal.style.display = 'block';
     });
-});
 
-// Scroll a secciones
-function scrollToSection(id) {
-    document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
-}
+    // Cerrar el modal
+    closeBtn.addEventListener('click', function () {
+        noteModal.style.display = 'none';
+    });
 
-// Función para cuenta regresiva
-function startCountdown(targetDate) {
-    const countdownElement = document.getElementById('countdown');
+    // Guardar la nueva nota
+    saveNoteBtn.addEventListener('click', function () {
+        const note = {
+            text: noteText.value,
+            date: noteDate.value
+        };
 
-    function updateCountdown() {
-        const now = new Date();
-        const distance = targetDate - now;
+        const notes = JSON.parse(localStorage.getItem('notes')) || [];
+        notes.push(note);
+        localStorage.setItem('notes', JSON.stringify(notes));
+        loadNotes();
+        noteModal.style.display = 'none';
+        noteText.value = '';  // Limpiar el textarea
+        noteDate.value = '';  // Limpiar el campo de fecha
+    });
 
-        if (distance < 0) {
-            countdownElement.innerHTML = "¡Ya estamos juntos!";
-            return;
+    // Cargar notas al iniciar
+    loadNotes();
+
+    // Cerrar el modal si se hace clic fuera de él
+    window.addEventListener('click', function (event) {
+        if (event.target == noteModal) {
+            noteModal.style.display = 'none';
         }
-
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-        countdownElement.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-    }
-
-    updateCountdown();
-    setInterval(updateCountdown, 1000);
-}
-
-// Ejemplo: Fecha objetivo
-const targetDate = new Date("Jun 10, 2025 11:30:20").getTime();
-startCountdown(targetDate);
-
-// Enviar Mensajes
-document.getElementById('messageForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const message = document.getElementById('message').value;
-    if (message.trim() !== "") {
-        const messageDisplay = document.getElementById('messageDisplay');
-        const newMessage = document.createElement('p');
-        newMessage.textContent = message;
-        messageDisplay.appendChild(newMessage);
-        document.getElementById('message').value = ""; // Limpiar textarea
-    }
+    });
 });
