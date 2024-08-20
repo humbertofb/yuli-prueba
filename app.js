@@ -31,15 +31,16 @@ document.addEventListener('DOMContentLoaded', () => {
     displayNote();
 });
 
-// Configuración de Firebase
-const firebaseConfig = {
-    apiKey: "TU_API_KEY",
-    authDomain: "TU_AUTH_DOMAIN",
-    projectId: "TU_PROJECT_ID",
-    storageBucket: "TU_STORAGE_BUCKET",
-    messagingSenderId: "TU_MESSAGING_SENDER_ID",
-    appId: "TU_APP_ID"
-};
+//// Configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyBfGBf5Zmp1hEZHT9aKIhTRcXjULD-jbGw",
+            authDomain: "mi-web-5402c.firebaseapp.com",
+            databaseURL: "https://mi-web-5402c-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "mi-web-5402c",
+            storageBucket: "mi-web-5402c.appspot.com",
+            messagingSenderId: "31272724190",
+            appId: "1:31272724190:web:51fcc8750c51abf783844f"
+        };
 
 // Inicializa Firebase
 firebase.initializeApp(firebaseConfig);
