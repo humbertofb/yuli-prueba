@@ -3,59 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Para mi cosita tierna</title>
+    <title>Notas Diarias</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
-        <h3>Para mi cosita tierna</h3>
-        <div class="menu-icon" id="menu-icon">&#9776;</div>
-    </header>
+    <div id="auth-container" class="auth-container">
+        <h2>Acceso</h2>
+        <input type="password" id="password-input" placeholder="Introduce la contraseña">
+        <button id="login-btn">Ingresar</button>
+        <p id="auth-error" class="auth-error"></p>
+    </div>
 
-    <!-- Menú desplegable -->
-    <nav id="menu">
-        <a href="#welcome">Inicio</a>
-        <a href="#poem">Poema</a>
-        <a href="#timeline">Cuenta Regresiva</a>
-        <a href="#messages">Mensajes</a>
-        <a href="#memories">Memorias</a>
-        <a href="videos.html">Videos</a>
-        <a href="frases.html">Frases</a>
-    </nav>
-
-    <!-- Página Principal -->
-    <section id="welcome">
-        <img src="IMG_5601.jpeg" alt="Imagen Romántica">
-        <p>Bienvenida a nuestro espacio especial. Aquí puedes explorar nuestros recuerdos y escribir nuevos capítulos juntos.</p>
-        <button onclick="scrollToSection('poem')">Comenzar</button>
-    </section>
-
-    <section id="poem">
-        <h2>Un poema para ti</h2>
-        <p>"Eres la luz en mi vida, la razón de mi alegría..."</p>
-    </section>
-
-    <section id="timeline">
-        <h2>Próximo reencuentro 🫶🏻</h2>
-        <div id="countdown"></div>
-    </section>
-
-    <section id="messages">
-        <h2>Mensajes de amor</h2>
-        <form id="messageForm">
-            <textarea id="message" placeholder="Escribe un mensaje..."></textarea>
-            <button type="submit">Enviar</button>
-        </form>
-        <div id="messageDisplay"></div>
-    </section>
-
-    <section id="memories">
-        <h2>Nuestros recuerdos</h2>
-        <div class="carousel">
-            <img src=""
+    <div id="app-container" class="container hidden">
+        <h1>Mis Notas para Ti</h1>
+        <div class="notebook">
+            <div class="notebook-header">
+                <button id="new-note-btn">Agregar Nota</button>
+                <span id="notification" class="notification hidden">Nueva nota disponible</span>
+            </div>
+            <div id="notes-container" class="notes-container">
+                <!-- Aquí se mostrarán las notas -->
+            </div>
         </div>
-    </section>
+    </div>
 
-    <script src="scripts.js"></script>
+    <!-- Modal para agregar nueva nota -->
+    <div id="note-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>Nueva Nota</h2>
+            <textarea id="note-text" placeholder="Escribe tu nota aquí..."></textarea>
+            <label for="note-date">Fecha de publicación:</label>
+            <input type="date" id="note-date" value="">
+            <button id="save-note-btn">Guardar Nota</button>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
