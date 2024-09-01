@@ -1,189 +1,157 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Juego de preguntas y respuestas</title>
-<script>
-window.onload = function() {
-alert("Debes activar el VPN");
-};
-</script>
-<link rel="stylesheet" href="styles.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego de preguntas y respuestas</title>
+    <script>
+        window.onload = function() {
+            alert("Debes activar el VPN");
+        };
+    </script>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
-<header>
-<h2>Preguntas y respuestas</h2>
-<button id="menuButton">☰</button>
-</header>
-<nav id="menu">
-<ul>
-<li><a href="index.html">Inicio</a></li>
-<li><a href="videos.html">Videos</a></li>
-<li><a href="viajes.html">Viajes</a></li>
-<li><a href="login.html"></a></li>
-<li><a href="arbol de metas.html">Árbol de metas</a></li>
-<li><a href="frases.html">Frases</a></li>
-<li><a href="reencuentro.html">Reencuentro</a></li>
-</ul>
-</nav>
-<main>
-<h1>Juego de Preguntas y Respuestas</h1>
-<div class="forms-container">
-<!-- Repetir el formulario cinco veces -->
-<form id="questionForm0">
-<input type="text" id="name0" placeholder="Escribe tu nombre" required>
-<textarea id="question0" placeholder="Escribe tu pregunta" required></textarea>
-<button type="submit">Enviar</button>
-<div id="questionsContainer0" class="styled-container">
-<!-- Las preguntas y respuestas se mostrarán aquí -->
-</div>
-</form>
-<form id="questionForm1">
-<input type="text" id="name1" placeholder="Escribe tu nombre" required>
-<textarea id="question1" placeholder="Escribe tu pregunta" required></textarea>
-<button type="submit">Enviar</button>
-<div id="questionsContainer1" class="styled-container">
-<!-- Las preguntas y respuestas se mostrarán aquí -->
-</div>
-</form>
-<form id="questionForm2">
-<input type="text" id="name2" placeholder="Escribe tu nombre" required>
-<textarea id="question2" placeholder="Escribe tu pregunta" required></textarea>
-<button type="submit">Enviar</button>
-<div id="questionsContainer2" class="styled-container">
-<!-- Las preguntas y respuestas se mostrarán aquí -->
-</div>
-</form>
-<form id="questionForm3">
-<input type="text" id="name3" placeholder="Escribe tu nombre" required>
-<textarea id="question3" placeholder="Escribe tu pregunta" required></textarea>
-<button type="submit">Enviar</button>
-<div id="questionsContainer3" class="styled-container">
-<!-- Las preguntas y respuestas se mostrarán aquí -->
-</div>
-</form>
-<form id="questionForm4">
-<input type="text" id="name4" placeholder="Escribe tu nombre" required>
-<textarea id="question4" placeholder="Escribe tu pregunta" required></textarea>
-<button type="submit">Enviar</button>
-<div id="questionsContainer4" class="styled-container">
-<!-- Las preguntas y respuestas se mostrarán aquí -->
-</div>
-</form>
-</div>
-</main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-const supabaseUrl = 'https://bfjimcvsknmxaanhmayc.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJmamltY3Zza25teGFhbmhtYXljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjUxNDIyMzcsImV4cCI6MjA0MDcxODIzN30.jVrklsT3FHaq8Hxzmg6GXlE6dp14ELqHCG7NjOA7muI';
-const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+    <header>
+        <h2>Preguntas y respuestas</h2>
+        <button id="menuButton">☰</button>
+    </header>
+    <nav id="menu">
+        <ul>
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="videos.html">Videos</a></li>
+            <li><a href="viajes.html">Viajes</a></li>
+            <li><a href="login.html"></a></li>
+            <li><a href="arbol de metas.html">Árbol de metas</a></li>
+            <li><a href="frases.html">Frases</a></li>
+            <li><a href="reencuentro.html">Reencuentro</a></li>
+        </ul>
+    </nav>
+    <main>
+        <h1>Juego de Preguntas y Respuestas</h1>
+        <div class="forms-container">
+            <!-- Repetir el formulario cinco veces -->
+            <form id="questionForm0">
+                <input type="text" id="name0" placeholder="Escribe tu nombre" required>
+                <textarea id="question0" placeholder="Escribe tu pregunta" required></textarea>
+                <button type="submit">Enviar</button>
+                <div id="questionsContainer0" class="styled-container"></div>
+            </form>
+            <!-- Repite los otros formularios de manera similar -->
+        </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Asegúrate de inicializar Supabase antes de usarla
+            const supabaseUrl = 'https://bfjimcvsknmxaanhmayc.supabase.co';
+            const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJmamltY3Zza25teGFhbmhtYXljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjUxNDIyMzcsImV4cCI6MjA0MDcxODIzN30.jVrklsT3FHaq8Hxzmg6GXlE6dp14ELqHCG7NjOA7muI';
+            const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-async function initializeForm(formIndex) {
-const { data: questions, error } = await supabase
-.from(`questions${formIndex}`)
-.select('*');
+            async function initializeForm(formIndex) {
+                const { data: questions, error } = await supabase
+                    .from(`questions${formIndex}`)
+                    .select('*');
 
-if (error) {
-console.error('Error al obtener preguntas:', error);
-return;
-}
+                if (error) {
+                    console.error('Error al obtener preguntas:', error);
+                    return;
+                }
 
-const questionsContainer = document.getElementById(`questionsContainer${formIndex}`);
-questionsContainer.innerHTML = '';
-questions.forEach((question) => {
-const div = document.createElement('div');
-div.className = 'question';
-div.innerHTML = `
-<p><strong>${question.name}</strong>: ${question.question}</p>
-${question.answer ? `<p><strong>Respuesta:</strong> ${question.answer}</p>` : ''}
-<div class="question-buttons">
-<button onclick="deleteQuestion(${formIndex}, ${question.id})">Eliminar</button>
-<button onclick="editQuestion(${formIndex}, ${question.id}, 'question')">Editar Pregunta</button>
-${question.answer ? `<button onclick="editQuestion(${formIndex}, ${question.id}, 'answer')">Editar Respuesta</button>` : ''}
-<button id="responder" onclick="showAnswerInput(${formIndex}, ${question.id})">
-<i class="fa fa-reply"></i> Responder
-</button>
-</div>
-<div id="answerInput${formIndex}-${question.id}" class="answer-input" style="display: none;">
-<textarea id="answer${formIndex}-${question.id}" placeholder="Escribe tu respuesta"></textarea>
-<button onclick="submitAnswer(${formIndex}, ${question.id})">Enviar Respuesta</button>
-</div>
-`;
-questionsContainer.appendChild(div);
-});
-}
+                const questionsContainer = document.getElementById(`questionsContainer${formIndex}`);
+                questionsContainer.innerHTML = '';
+                questions.forEach((question) => {
+                    const div = document.createElement('div');
+                    div.className = 'question';
+                    div.innerHTML = `
+                        <p><strong>${question.name}</strong>: ${question.question}</p>
+                        ${question.answer ? `<p><strong>Respuesta:</strong> ${question.answer}</p>` : ''}
+                        <div class="question-buttons">
+                            <button onclick="deleteQuestion(${formIndex}, ${question.id})">Eliminar</button>
+                            <button onclick="editQuestion(${formIndex}, ${question.id}, 'question')">Editar Pregunta</button>
+                            ${question.answer ? `<button onclick="editQuestion(${formIndex}, ${question.id}, 'answer')">Editar Respuesta</button>` : ''}
+                            <button id="responder" onclick="showAnswerInput(${formIndex}, ${question.id})">
+                                <i class="fa fa-reply"></i> Responder
+                            </button>
+                        </div>
+                        <div id="answerInput${formIndex}-${question.id}" class="answer-input" style="display: none;">
+                            <textarea id="answer${formIndex}-${question.id}" placeholder="Escribe tu respuesta"></textarea>
+                            <button onclick="submitAnswer(${formIndex}, ${question.id})">Enviar Respuesta</button>
+                        </div>
+                    `;
+                    questionsContainer.appendChild(div);
+                });
+            }
 
-document.getElementById(`questionForm0`).addEventListener('submit', async function(e) {
-e.preventDefault();
-const name = document.getElementById(`name0`).value;
-const question = document.getElementById(`question0`).value;
-const { error } = await supabase
-.from('questions0')
-.insert([{ name, question }]);
-if (error) {
-console.error('Error al enviar pregunta:', error);
-} else {
-document.getElementById(`name0`).value = '';
-document.getElementById(`question0`).value = '';
-initializeForm(0);
-}
-});
+            document.getElementById(`questionForm0`).addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const name = document.getElementById(`name0`).value;
+                const question = document.getElementById(`question0`).value;
+                const { error } = await supabase
+                    .from('questions0')
+                    .insert([{ name, question }]);
+                if (error) {
+                    console.error('Error al enviar pregunta:', error);
+                } else {
+                    document.getElementById(`name0`).value = '';
+                    document.getElementById(`question0`).value = '';
+                    initializeForm(0);
+                }
+            });
 
-// Repite la inicialización para los otros formularios
-for (let i = 0; i < 5; i++) {
-initializeForm(i);
-}
+            // Repite la inicialización para los otros formularios
+            for (let i = 0; i < 5; i++) {
+                initializeForm(i);
+            }
 
-window.deleteQuestion = async function(formIndex, id) {
-const { error } = await supabase
-.from(`questions${formIndex}`)
-.delete()
-.eq('id', id);
-if (error) {
-console.error('Error al eliminar pregunta:', error);
-} else {
-initializeForm(formIndex);
-}
-};
+            window.deleteQuestion = async function(formIndex, id) {
+                const { error } = await supabase
+                    .from(`questions${formIndex}`)
+                    .delete()
+                    .eq('id', id);
+                if (error) {
+                    console.error('Error al eliminar pregunta:', error);
+                } else {
+                    initializeForm(formIndex);
+                }
+            };
 
-window.editQuestion = async function(formIndex, id, type) {
-const newValue = prompt(`Edita tu ${type}:`);
-if (newValue) {
-const { error } = await supabase
-.from(`questions${formIndex}`)
-.update({ [type]: newValue })
-.eq('id', id);
-if (error) {
-console.error(`Error al editar ${type}:`, error);
-} else {
-initializeForm(formIndex);
-}
-}
-};
+            window.editQuestion = async function(formIndex, id, type) {
+                const newValue = prompt(`Edita tu ${type}:`);
+                if (newValue) {
+                    const { error } = await supabase
+                        .from(`questions${formIndex}`)
+                        .update({ [type]: newValue })
+                        .eq('id', id);
+                    if (error) {
+                        console.error(`Error al editar ${type}:`, error);
+                    } else {
+                        initializeForm(formIndex);
+                    }
+                }
+            };
 
-window.showAnswerInput = function(formIndex, id) {
-document.getElementById(`answerInput${formIndex}-${id}`).style.display = 'block';
-};
+            window.showAnswerInput = function(formIndex, id) {
+                document.getElementById(`answerInput${formIndex}-${id}`).style.display = 'block';
+            };
 
-window.submitAnswer = async function(formIndex, id) {
-const answer = document.getElementById(`answer${formIndex}-${id}`).value;
-if (answer) {
-const { error } = await supabase
-.from(`questions${formIndex}`)
-.update({ answer })
-.eq('id', id);
-if (error) {
-console.error('Error al enviar respuesta:', error);
-} else {
-document.getElementById(`answerInput${formIndex}-${id}`).style.display = 'none';
-initializeForm(formIndex);
-}
-}
-};
-});
-</script>
+            window.submitAnswer = async function(formIndex, id) {
+                const answer = document.getElementById(`answer${formIndex}-${id}`).value;
+                if (answer) {
+                    const { error } = await supabase
+                        .from(`questions${formIndex}`)
+                        .update({ answer })
+                        .eq('id', id);
+                    if (error) {
+                        console.error('Error al enviar respuesta:', error);
+                    } else {
+                        document.getElementById(`answerInput${formIndex}-${id}`).style.display = 'none';
+                        initializeForm(formIndex);
+                    }
+                }
+            };
+        });
+    </script>
 </body>
 </html>
