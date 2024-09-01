@@ -69,3 +69,53 @@ nav ul li a:hover {
 main {
     padding: 2rem;
 }
+
+#questionsContainer {
+    margin-top: 2rem;
+}
+
+.question {
+    background: #fff;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.question-buttons {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.question-buttons button {
+    background-color: #ff3333;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px 0;
+}
+
+.question-buttons button:hover {
+    background-color: #ff3333;
+}
+
+#responder {
+    display: flex;
+    align-items: center;
+}
+
+#responder::before {
+    margin-right: 5px;
+}
+
+/* Estilos adicionales del archivo CSS proporcionado */
+.styled-container {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
