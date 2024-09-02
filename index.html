@@ -31,7 +31,12 @@
 <button type="submit">Enviar</button>
 </form>
 <div class="forms-container">
-<div id="questionsContainer" class="styled-container"></div>
+<!-- Repetir el formulario cinco veces -->
+<div id="questionsContainer0" class="styled-container"></div>
+<div id="questionsContainer1" class="styled-container"></div>
+<div id="questionsContainer2" class="styled-container"></div>
+<div id="questionsContainer3" class="styled-container"></div>
+<div id="questionsContainer4" class="styled-container"></div>
 </div>
 </main>
 
@@ -56,33 +61,33 @@ console.error('Error al inicializar Supabase:', error);
 return;
 }
 
-async function initializeForm() {
+async function initializeForm(formIndex) {
 try {
 const { data: questions, error } = await supabaseClient
-.from('questions')
+.from(`questions${formIndex}`)
 .select('*');
 
 if (error) throw error;
 
-const questionsContainer = document.getElementById('questionsContainer');
+const questionsContainer = document.getElementById(`questionsContainer${formIndex}`);
 questionsContainer.innerHTML = '';
 questions.forEach((question) => {
 const div = document.createElement('div');
 div.className = 'question';
 div.innerHTML = `
-<p><strong>${question.name}</strong>: ${question.question}</p>
-${question.answer ? `<p><strong>Respuesta:</strong> ${question.answer}</p>` : ''}
+<p><strong>${question.name}</strong>: <span class="question-text" contenteditable="false">${question.question}</span></p>
+${question.answer ? `<p><strong>Respuesta:</strong> <span class="answer-text" contenteditable="false">${question.answer}</span></p>` : ''}
 <div class="question-buttons">
-<button onclick="deleteQuestion(${question.id})">Eliminar</button>
-<button onclick="editQuestion(${question.id}, 'question')">Editar Pregunta</button>
-${question.answer ? `<button onclick="editQuestion(${question.id}, 'answer')">Editar Respuesta</button>` : ''}
-<button id="responder" onclick="showAnswerInput(${question.id})">
+<button onclick="deleteQuestion(${formIndex}, ${question.id})">Eliminar</button>
+<button onclick="editQuestion(${formIndex}, ${question.id}, 'question')">Editar Pregunta</button>
+${question.answer ? `<button onclick="editQuestion(${formIndex}, ${question.id}, 'answer')">Editar Respuesta</button>` : ''}
+<button id="responder" onclick="showAnswerInput(${formIndex}, ${question.id})">
 <i class="fa fa-reply"></i> Responder
 </button>
 </div>
-<div id="answerInput${question.id}" class="answer-input" style="display: none;">
-<textarea id="answer${question.id}" placeholder="Escribe tu respuesta"></textarea>
-<button onclick="submitAnswer(${question.id})">Enviar Respuesta</button>
+<div id="answerInput${formIndex}-${question.id}" class="answer-input" style="display: none;">
+<textarea id="answer${formIndex}-${question.id}" placeholder="Escribe tu respuesta"></textarea>
+<button onclick="submitAnswer(${formIndex}, ${question.id})">Enviar Respuesta</button>
 </div>
 `;
 questionsContainer.appendChild(div);
@@ -106,64 +111,95 @@ if (error) throw error;
 
 document.getElementById('name').value = '';
 document.getElementById('question').value = '';
-initializeForm();
+initializeForm(0);
 } catch (error) {
 console.error('Error al enviar la pregunta:', error);
 }
 });
 
-initializeForm();
+for (let i = 0; i < 5; i++) {
+initializeForm(i);
+}
 
-window.deleteQuestion = async function(id) {
+window.deleteQuestion = async function(formIndex, id) {
 try {
 const { error } = await supabaseClient
-.from('questions')
+.from(`questions${formIndex}`)
 .delete()
 .eq('id', id);
 
 if (error) throw error;
 
-initializeForm();
+initializeForm(formIndex);
 } catch (error) {
 console.error('Error al eliminar la pregunta:', error);
 }
 };
 
-window.editQuestion = async function(id, type) {
-const newValue = prompt(`Edita tu ${type}:`);
-if (newValue) {
+window.editQuestion = function(formIndex, id, type) {
+const questionText = document.querySelector(`#questionsContainer${formIndex} .question-text`);
+const answerText = document.querySelector(`#questionsContainer${formIndex} .answer-text`);
+
+if (type === 'question') {
+questionText.contentEditable = true;
+questionText.focus();
+} else if (type === 'answer') {
+answerText.contentEditable = true;
+answerText.focus();
+}
+
+questionText.addEventListener('blur', async function() {
+const newValue = questionText.innerText;
 try {
 const { error } = await supabaseClient
-.from('questions')
-.update({ [type]: newValue })
+.from(`questions${formIndex}`)
+.update({ question: newValue })
 .eq('id', id);
 
 if (error) throw error;
 
-initializeForm();
+questionText.contentEditable = false;
+initializeForm(formIndex);
 } catch (error) {
 console.error(`Error al editar ${type}:`, error);
 }
+});
+
+answerText.addEventListener('blur', async function() {
+const newValue = answerText.innerText;
+try {
+const { error } = await supabaseClient
+.from(`questions${formIndex}`)
+.update({ answer: newValue })
+.eq('id', id);
+
+if (error) throw error;
+
+answerText.contentEditable = false;
+initializeForm(formIndex);
+} catch (error) {
+console.error(`Error al editar ${type}:`, error);
 }
+});
 };
 
-window.showAnswerInput = function(id) {
-document.getElementById(`answerInput${id}`).style.display = 'block';
+window.showAnswerInput = function(formIndex, id) {
+document.getElementById(`answerInput${formIndex}-${id}`).style.display = 'block';
 };
 
-window.submitAnswer = async function(id) {
-const answer = document.getElementById(`answer${id}`).value;
+window.submitAnswer = async function(formIndex, id) {
+const answer = document.getElementById(`answer${formIndex}-${id}`).value;
 if (answer) {
 try {
 const { error } = await supabaseClient
-.from('questions')
+.from(`questions${formIndex}`)
 .update({ answer })
 .eq('id', id);
 
 if (error) throw error;
 
-document.getElementById(`answerInput${id}`).style.display = 'none';
-initializeForm();
+document.getElementById(`answerInput${formIndex}-${id}`).style.display = 'none';
+initializeForm(formIndex);
 } catch (error) {
 console.error('Error al enviar la respuesta:', error);
 }
