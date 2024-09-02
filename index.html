@@ -32,9 +32,11 @@
 <div id="questionsContainer2" class="styled-container"></div>
 <div id="questionsContainer3" class="styled-container"></div>
 <div id="questionsContainer4" class="styled-container"></div>
+<form id="questionForm">
 <input type="text" id="name" placeholder="Escribe tu nombre" required>
 <textarea id="question" placeholder="Escribe tu pregunta" required></textarea>
 <button type="submit">Enviar</button>
+</form>
 </div>
 </main>
 
@@ -95,7 +97,7 @@ console.error('Error al inicializar el formulario:', error);
 }
 }
 
-document.getElementById('questionsContainer').addEventListener('submit', async function(e) {
+document.getElementById('questionForm').addEventListener('submit', async function(e) {
 e.preventDefault();
 const name = document.getElementById('name').value;
 const question = document.getElementById('question').value;
