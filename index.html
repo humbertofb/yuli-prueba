@@ -43,20 +43,26 @@
         </div>
     </main>
 
-    <!-- Cargar el script de Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <!-- Cargar el script de Supabase con defer para asegurarse que se cargue antes de usarlo -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js" defer></script>
 
     <script>
         // Asegúrate de que toda la lógica se ejecute cuando el DOM esté completamente cargado
         document.addEventListener('DOMContentLoaded', async function() {
+            // Comprobar si la biblioteca de Supabase está cargada correctamente
+            if (typeof supabase === 'undefined' || typeof supabase.createClient === 'undefined') {
+                console.error('Error: La biblioteca de Supabase no se ha cargado correctamente.');
+                return;
+            }
+
             const supabaseUrl = 'https://bfjimcvsknmxaanhmayc.supabase.co';
             const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJmamltY3Zza25teGFhbmhtYXljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjUxNDIyMzcsImV4cCI6MjA0MDcxODIzN30.jVrklsT3FHaq8Hxzmg6GXlE6dp14ELqHCG7NjOA7muI';
 
             // Inicializa el cliente de Supabase una vez que el DOM esté listo
-            let supabase; // Declaramos supabase aquí para evitar problemas de alcance
+            let supabaseClient; // Declaramos supabaseClient aquí
 
             try {
-                supabase = supabase.createClient(supabaseUrl, supabaseKey); // Inicialización
+                supabaseClient = supabase.createClient(supabaseUrl, supabaseKey); // Inicialización
             } catch (error) {
                 console.error('Error al inicializar Supabase:', error);
                 return; // Si hay un error en la inicialización, el flujo termina aquí
@@ -65,7 +71,7 @@
             // Función para inicializar el formulario y cargar las preguntas
             async function initializeForm(formIndex) {
                 try {
-                    const { data: questions, error } = await supabase
+                    const { data: questions, error } = await supabaseClient
                         .from(`questions${formIndex}`)
                         .select('*');
 
@@ -106,7 +112,7 @@
                 const question = document.getElementById(`question0`).value;
 
                 try {
-                    const { error } = await supabase
+                    const { error } = await supabaseClient
                         .from('questions0')
                         .insert([{ name, question }]);
 
@@ -129,7 +135,7 @@
             // Función para eliminar preguntas
             window.deleteQuestion = async function(formIndex, id) {
                 try {
-                    const { error } = await supabase
+                    const { error } = await supabaseClient
                         .from(`questions${formIndex}`)
                         .delete()
                         .eq('id', id);
@@ -147,7 +153,7 @@
                 const newValue = prompt(`Edita tu ${type}:`);
                 if (newValue) {
                     try {
-                        const { error } = await supabase
+                        const { error } = await supabaseClient
                             .from(`questions${formIndex}`)
                             .update({ [type]: newValue })
                             .eq('id', id);
@@ -171,7 +177,7 @@
                 const answer = document.getElementById(`answer${formIndex}-${id}`).value;
                 if (answer) {
                     try {
-                        const { error } = await supabase
+                        const { error } = await supabaseClient
                             .from(`questions${formIndex}`)
                             .update({ answer })
                             .eq('id', id);
