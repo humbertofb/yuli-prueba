@@ -1,190 +1,180 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Juego de preguntas y respuestas</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Juego de preguntas y respuestas</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
-    <header>
-        <h2>Preguntas y respuestas</h2>
-        <button id="menuButton">☰</button>
-    </header>
-    <nav id="menu">
-        <ul>
-            <li><a href="index.html">Inicio</a></li>
-            <li><a href="videos.html">Videos</a></li>
-            <li><a href="viajes.html">Viajes</a></li>
-            <li><a href="login.html"></a></li>
-            <li><a href="arbol de metas.html">Árbol de metas</a></li>
-            <li><a href="frases.html">Frases</a></li>
-            <li><a href="reencuentro.html">Reencuentro</a></li>
-        </ul>
-    </nav>
-    <main>
-        <h1>Juego de Preguntas y Respuestas</h1>
-        <div class="forms-container">
-            <!-- Repetir el formulario cinco veces -->
-            <div id="questionsContainer" class="styled-container"></div>
-                <input type="text" id="name" placeholder="Escribe tu nombre" required>
-                <textarea id="question" placeholder="Escribe tu pregunta" required></textarea>
-                <button type="submit">Enviar</button>
-            </form>
-            <!-- Los otros formularios pueden replicarse de manera similar -->
-        </div>
-    </main>
+<header>
+<h2>Preguntas y respuestas</h2>
+<button id="menuButton">☰</button>
+</header>
+<nav id="menu">
+<ul>
+<li><a href="index.html">Inicio</a></li>
+<li><a href="videos.html">Videos</a></li>
+<li><a href="viajes.html">Viajes</a></li>
+<li><a href="login.html"></a></li>
+<li><a href="arbol de metas.html">Árbol de metas</a></li>
+<li><a href="frases.html">Frases</a></li>
+<li><a href="reencuentro.html">Reencuentro</a></li>
+</ul>
+</nav>
+<main>
+<h1>Juego de Preguntas y Respuestas</h1>
+<div class="forms-container">
+<!-- Repetir el formulario cinco veces -->
+<div id="questionsContainer0" class="styled-container"></div>
+<div id="questionsContainer1" class="styled-container"></div>
+<div id="questionsContainer2" class="styled-container"></div>
+<div id="questionsContainer3" class="styled-container"></div>
+<div id="questionsContainer4" class="styled-container"></div>
+<input type="text" id="name" placeholder="Escribe tu nombre" required>
+<textarea id="question" placeholder="Escribe tu pregunta" required></textarea>
+<button type="submit">Enviar</button>
+</div>
+</main>
 
-    <!-- Cargar el script de Supabase con defer para asegurarse que se cargue antes de usarlo -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js" defer></script>
 
-    <script>
-        // Asegúrate de que toda la lógica se ejecute cuando el DOM esté completamente cargado
-        document.addEventListener('DOMContentLoaded', async function() {
-            // Comprobar si la biblioteca de Supabase está cargada correctamente
-            if (typeof supabase === 'undefined' || typeof supabase.createClient === 'undefined') {
-                console.error('Error: La biblioteca de Supabase no se ha cargado correctamente.');
-                return;
-            }
+<script>
+document.addEventListener('DOMContentLoaded', async function() {
+if (typeof supabase === 'undefined' || typeof supabase.createClient === 'undefined') {
+console.error('Error: La biblioteca de Supabase no se ha cargado correctamente.');
+return;
+}
 
-            const supabaseUrl = 'https://bfjimcvsknmxaanhmayc.supabase.co';
-            const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJmamltY3Zza25teGFhbmhtYXljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjUxNDIyMzcsImV4cCI6MjA0MDcxODIzN30.jVrklsT3FHaq8Hxzmg6GXlE6dp14ELqHCG7NjOA7muI';
+const supabaseUrl = 'https://bfjimcvsknmxaanhmayc.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJmamltY3Zza25teGFhbmhtYXljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjUxNDIyMzcsImV4cCI6MjA0MDcxODIzN30.jVrklsT3FHaq8Hxzmg6GXlE6dp14ELqHCG7NjOA7muI';
 
-            // Inicializa el cliente de Supabase una vez que el DOM esté listo
-            let supabaseClient; // Declaramos supabaseClient aquí
+let supabaseClient;
 
-            try {
-                supabaseClient = supabase.createClient(supabaseUrl, supabaseKey); // Inicialización
-            } catch (error) {
-                console.error('Error al inicializar Supabase:', error);
-                return; // Si hay un error en la inicialización, el flujo termina aquí
-            }
+try {
+supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+} catch (error) {
+console.error('Error al inicializar Supabase:', error);
+return;
+}
 
-            // Función para inicializar el formulario y cargar las preguntas
-            async function initializeForm(formIndex) {
-                try {
-                    const { data: questions, error } = await supabaseClient
-                        .from(`questions${formIndex}`)
-                        .select('*');
+async function initializeForm(formIndex) {
+try {
+const { data: questions, error } = await supabaseClient
+.from(`questions${formIndex}`)
+.select('*');
 
-                    if (error) throw error;
+if (error) throw error;
 
-                    const questionsContainer = document.getElementById(`questionsContainer${formIndex}`);
-                    questionsContainer.innerHTML = '';
-                    questions.forEach((question) => {
-                        const div = document.createElement('div');
-                        div.className = 'question';
-                        div.innerHTML = `
-                            <p><strong>${question.name}</strong>: ${question.question}</p>
-                            ${question.answer ? `<p><strong>Respuesta:</strong> ${question.answer}</p>` : ''}
-                            <div class="question-buttons">
-                                <button onclick="deleteQuestion(${formIndex}, ${question.id})">Eliminar</button>
-                                <button onclick="editQuestion(${formIndex}, ${question.id}, 'question')">Editar Pregunta</button>
-                                ${question.answer ? `<button onclick="editQuestion(${formIndex}, ${question.id}, 'answer')">Editar Respuesta</button>` : ''}
-                                <button id="responder" onclick="showAnswerInput(${formIndex}, ${question.id})">
-                                    <i class="fa fa-reply"></i> Responder
-                                </button>
-                            </div>
-                            <div id="answerInput${formIndex}-${question.id}" class="answer-input" style="display: none;">
-                                <textarea id="answer${formIndex}-${question.id}" placeholder="Escribe tu respuesta"></textarea>
-                                <button onclick="submitAnswer(${formIndex}, ${question.id})">Enviar Respuesta</button>
-                            </div>
-                        `;
-                        questionsContainer.appendChild(div);
-                    });
-                } catch (error) {
-                    console.error('Error al inicializar el formulario:', error);
-                }
-            }
+const questionsContainer = document.getElementById(`questionsContainer${formIndex}`);
+questionsContainer.innerHTML = '';
+questions.forEach((question) => {
+const div = document.createElement('div');
+div.className = 'question';
+div.innerHTML = `
+<p><strong>${question.name}</strong>: ${question.question}</p>
+${question.answer ? `<p><strong>Respuesta:</strong> ${question.answer}</p>` : ''}
+<div class="question-buttons">
+<button onclick="deleteQuestion(${formIndex}, ${question.id})">Eliminar</button>
+<button onclick="editQuestion(${formIndex}, ${question.id}, 'question')">Editar Pregunta</button>
+${question.answer ? `<button onclick="editQuestion(${formIndex}, ${question.id}, 'answer')">Editar Respuesta</button>` : ''}
+<button id="responder" onclick="showAnswerInput(${formIndex}, ${question.id})">
+<i class="fa fa-reply"></i> Responder
+</button>
+</div>
+<div id="answerInput${formIndex}-${question.id}" class="answer-input" style="display: none;">
+<textarea id="answer${formIndex}-${question.id}" placeholder="Escribe tu respuesta"></textarea>
+<button onclick="submitAnswer(${formIndex}, ${question.id})">Enviar Respuesta</button>
+</div>
+`;
+questionsContainer.appendChild(div);
+});
+} catch (error) {
+console.error('Error al inicializar el formulario:', error);
+}
+}
 
-            // Inicializa el formulario al enviar una nueva pregunta
-            document.getElementById(`questionsContainer`).addEventListener('submit', async function(e) {
-                e.preventDefault();
-                const name = document.getElementById(`name`).value;
-                const question = document.getElementById(`question0`).value;
+document.getElementById('questionsContainer').addEventListener('submit', async function(e) {
+e.preventDefault();
+const name = document.getElementById('name').value;
+const question = document.getElementById('question').value;
 
-                try {
-                    const { error } = await supabaseClient
-                        .from('questions')
-                        .insert([{ name, question }]);
+try {
+const { error } = await supabaseClient
+.from('questions')
+.insert([{ name, question }]);
 
-                    if (error) throw error;
+if (error) throw error;
 
-                    // Limpiar el formulario después de enviar la pregunta
-                    document.getElementById(`name`).value = '';
-                    document.getElementById(`question`).value = '';
-                    initializeForm(0);
-                } catch (error) {
-                    console.error('Error al enviar la pregunta:', error);
-                }
-            });
+document.getElementById('name').value = '';
+document.getElementById('question').value = '';
+initializeForm(0);
+} catch (error) {
+console.error('Error al enviar la pregunta:', error);
+}
+});
 
-            // Inicializar los formularios repetidos
-            for (let i = 0; i < 5; i++) {
-                initializeForm(i);
-            }
+for (let i = 0; i < 5; i++) {
+initializeForm(i);
+}
 
-            // Función para eliminar preguntas
-            window.deleteQuestion = async function(formIndex, id) {
-                try {
-                    const { error } = await supabaseClient
-                        .from(`questions${formIndex}`)
-                        .delete()
-                        .eq('id', id);
+window.deleteQuestion = async function(formIndex, id) {
+try {
+const { error } = await supabaseClient
+.from(`questions${formIndex}`)
+.delete()
+.eq('id', id);
 
-                    if (error) throw error;
+if (error) throw error;
 
-                    initializeForm(formIndex);
-                } catch (error) {
-                    console.error('Error al eliminar la pregunta:', error);
-                }
-            };
+initializeForm(formIndex);
+} catch (error) {
+console.error('Error al eliminar la pregunta:', error);
+}
+};
 
-            // Función para editar preguntas y respuestas
-            window.editQuestion = async function(formIndex, id, type) {
-                const newValue = prompt(`Edita tu ${type}:`);
-                if (newValue) {
-                    try {
-                        const { error } = await supabaseClient
-                            .from(`questions${formIndex}`)
-                            .update({ [type]: newValue })
-                            .eq('id', id);
+window.editQuestion = async function(formIndex, id, type) {
+const newValue = prompt(`Edita tu ${type}:`);
+if (newValue) {
+try {
+const { error } = await supabaseClient
+.from(`questions${formIndex}`)
+.update({ [type]: newValue })
+.eq('id', id);
 
-                        if (error) throw error;
+if (error) throw error;
 
-                        initializeForm(formIndex);
-                    } catch (error) {
-                        console.error(`Error al editar ${type}:`, error);
-                    }
-                }
-            };
+initializeForm(formIndex);
+} catch (error) {
+console.error(`Error al editar ${type}:`, error);
+}
+}
+};
 
-            // Función para mostrar el cuadro de respuesta
-            window.showAnswerInput = function(formIndex, id) {
-                document.getElementById(`answerInput${formIndex}-${id}`).style.display = 'block';
-            };
+window.showAnswerInput = function(formIndex, id) {
+document.getElementById(`answerInput${formIndex}-${id}`).style.display = 'block';
+};
 
-            // Función para enviar respuestas
-            window.submitAnswer = async function(formIndex, id) {
-                const answer = document.getElementById(`answer${formIndex}-${id}`).value;
-                if (answer) {
-                    try {
-                        const { error } = await supabaseClient
-                            .from(`questions${formIndex}`)
-                            .update({ answer })
-                            .eq('id', id);
+window.submitAnswer = async function(formIndex, id) {
+const answer = document.getElementById(`answer${formIndex}-${id}`).value;
+if (answer) {
+try {
+const { error } = await supabaseClient
+.from(`questions${formIndex}`)
+.update({ answer })
+.eq('id', id);
 
-                        if (error) throw error;
+if (error) throw error;
 
-                        document.getElementById(`answerInput${formIndex}-${id}`).style.display = 'none';
-                        initializeForm(formIndex);
-                    } catch (error) {
-                        console.error('Error al enviar la respuesta:', error);
-                    }
-                }
-            };
-        });
-    </script>
+document.getElementById(`answerInput${formIndex}-${id}`).style.display = 'none';
+initializeForm(formIndex);
+} catch (error) {
+console.error('Error al enviar la respuesta:', error);
+}
+}
+};
+});
+</script>
 </body>
 </html>
