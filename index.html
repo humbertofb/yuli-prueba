@@ -53,7 +53,14 @@
             const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJmamltY3Zza25teGFhbmhtYXljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjUxNDIyMzcsImV4cCI6MjA0MDcxODIzN30.jVrklsT3FHaq8Hxzmg6GXlE6dp14ELqHCG7NjOA7muI';
 
             // Inicializa el cliente de Supabase una vez que el DOM esté listo
-            const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+            let supabase; // Declaramos supabase aquí para evitar problemas de alcance
+
+            try {
+                supabase = supabase.createClient(supabaseUrl, supabaseKey); // Inicialización
+            } catch (error) {
+                console.error('Error al inicializar Supabase:', error);
+                return; // Si hay un error en la inicialización, el flujo termina aquí
+            }
 
             // Función para inicializar el formulario y cargar las preguntas
             async function initializeForm(formIndex) {
