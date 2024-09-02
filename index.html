@@ -28,8 +28,8 @@
         <div class="forms-container">
             <!-- Repetir el formulario cinco veces -->
             <div id="questionsContainer" class="styled-container"></div>
-                <input type="text" id="name0" placeholder="Escribe tu nombre" required>
-                <textarea id="question0" placeholder="Escribe tu pregunta" required></textarea>
+                <input type="text" id="name" placeholder="Escribe tu nombre" required>
+                <textarea id="question" placeholder="Escribe tu pregunta" required></textarea>
                 <button type="submit">Enviar</button>
             </form>
             <!-- Los otros formularios pueden replicarse de manera similar -->
@@ -101,19 +101,19 @@
             // Inicializa el formulario al enviar una nueva pregunta
             document.getElementById(`questionsContainer`).addEventListener('submit', async function(e) {
                 e.preventDefault();
-                const name = document.getElementById(`name0`).value;
+                const name = document.getElementById(`name`).value;
                 const question = document.getElementById(`question0`).value;
 
                 try {
                     const { error } = await supabaseClient
-                        .from('questions0')
+                        .from('questions')
                         .insert([{ name, question }]);
 
                     if (error) throw error;
 
                     // Limpiar el formulario después de enviar la pregunta
-                    document.getElementById(`name0`).value = '';
-                    document.getElementById(`question0`).value = '';
+                    document.getElementById(`name`).value = '';
+                    document.getElementById(`question`).value = '';
                     initializeForm(0);
                 } catch (error) {
                     console.error('Error al enviar la pregunta:', error);
