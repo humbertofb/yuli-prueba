@@ -31,12 +31,7 @@
 <button type="submit">Enviar</button>
 </form>
 <div class="forms-container">
-<!-- Repetir el formulario cinco veces -->
-<div id="questionsContainer0" class="styled-container"></div>
-<div id="questionsContainer1" class="styled-container"></div>
-<div id="questionsContainer2" class="styled-container"></div>
-<div id="questionsContainer3" class="styled-container"></div>
-<div id="questionsContainer4" class="styled-container"></div>
+<div id="questionsContainer" class="styled-container"></div>
 </div>
 </main>
 
@@ -61,15 +56,15 @@ console.error('Error al inicializar Supabase:', error);
 return;
 }
 
-async function initializeForm(formIndex) {
+async function initializeForm() {
 try {
 const { data: questions, error } = await supabaseClient
-.from(`questions${formIndex}`)
+.from('questions')
 .select('*');
 
 if (error) throw error;
 
-const questionsContainer = document.getElementById(`questionsContainer${formIndex}`);
+const questionsContainer = document.getElementById('questionsContainer');
 questionsContainer.innerHTML = '';
 questions.forEach((question) => {
 const div = document.createElement('div');
@@ -78,16 +73,16 @@ div.innerHTML = `
 <p><strong>${question.name}</strong>: ${question.question}</p>
 ${question.answer ? `<p><strong>Respuesta:</strong> ${question.answer}</p>` : ''}
 <div class="question-buttons">
-<button onclick="deleteQuestion(${formIndex}, ${question.id})">Eliminar</button>
-<button onclick="editQuestion(${formIndex}, ${question.id}, 'question')">Editar Pregunta</button>
-${question.answer ? `<button onclick="editQuestion(${formIndex}, ${question.id}, 'answer')">Editar Respuesta</button>` : ''}
-<button id="responder" onclick="showAnswerInput(${formIndex}, ${question.id})">
+<button onclick="deleteQuestion(${question.id})">Eliminar</button>
+<button onclick="editQuestion(${question.id}, 'question')">Editar Pregunta</button>
+${question.answer ? `<button onclick="editQuestion(${question.id}, 'answer')">Editar Respuesta</button>` : ''}
+<button id="responder" onclick="showAnswerInput(${question.id})">
 <i class="fa fa-reply"></i> Responder
 </button>
 </div>
-<div id="answerInput${formIndex}-${question.id}" class="answer-input" style="display: none;">
-<textarea id="answer${formIndex}-${question.id}" placeholder="Escribe tu respuesta"></textarea>
-<button onclick="submitAnswer(${formIndex}, ${question.id})">Enviar Respuesta</button>
+<div id="answerInput${question.id}" class="answer-input" style="display: none;">
+<textarea id="answer${question.id}" placeholder="Escribe tu respuesta"></textarea>
+<button onclick="submitAnswer(${question.id})">Enviar Respuesta</button>
 </div>
 `;
 questionsContainer.appendChild(div);
@@ -111,66 +106,64 @@ if (error) throw error;
 
 document.getElementById('name').value = '';
 document.getElementById('question').value = '';
-initializeForm(0);
+initializeForm();
 } catch (error) {
 console.error('Error al enviar la pregunta:', error);
 }
 });
 
-for (let i = 0; i < 5; i++) {
-initializeForm(i);
-}
+initializeForm();
 
-window.deleteQuestion = async function(formIndex, id) {
+window.deleteQuestion = async function(id) {
 try {
 const { error } = await supabaseClient
-.from(`questions${formIndex}`)
+.from('questions')
 .delete()
 .eq('id', id);
 
 if (error) throw error;
 
-initializeForm(formIndex);
+initializeForm();
 } catch (error) {
 console.error('Error al eliminar la pregunta:', error);
 }
 };
 
-window.editQuestion = async function(formIndex, id, type) {
+window.editQuestion = async function(id, type) {
 const newValue = prompt(`Edita tu ${type}:`);
 if (newValue) {
 try {
 const { error } = await supabaseClient
-.from(`questions${formIndex}`)
+.from('questions')
 .update({ [type]: newValue })
 .eq('id', id);
 
 if (error) throw error;
 
-initializeForm(formIndex);
+initializeForm();
 } catch (error) {
 console.error(`Error al editar ${type}:`, error);
 }
 }
 };
 
-window.showAnswerInput = function(formIndex, id) {
-document.getElementById(`answerInput${formIndex}-${id}`).style.display = 'block';
+window.showAnswerInput = function(id) {
+document.getElementById(`answerInput${id}`).style.display = 'block';
 };
 
-window.submitAnswer = async function(formIndex, id) {
-const answer = document.getElementById(`answer${formIndex}-${id}`).value;
+window.submitAnswer = async function(id) {
+const answer = document.getElementById(`answer${id}`).value;
 if (answer) {
 try {
 const { error } = await supabaseClient
-.from(`questions${formIndex}`)
+.from('questions')
 .update({ answer })
 .eq('id', id);
 
 if (error) throw error;
 
-document.getElementById(`answerInput${formIndex}-${id}`).style.display = 'none';
-initializeForm(formIndex);
+document.getElementById(`answerInput${id}`).style.display = 'none';
+initializeForm();
 } catch (error) {
 console.error('Error al enviar la respuesta:', error);
 }
