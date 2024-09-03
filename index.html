@@ -171,12 +171,6 @@ nestedDiv.className = 'nested-response';
 nestedDiv.innerHTML = `
 <p><strong>${response.name}</strong>: <span class="answer-text" contenteditable="false">${response.response}</span></p>
 <div class="question-buttons">
-<button onclick="deleteResponse(${formIndex}, ${response.id})">Eliminar</button>
-<button onclick="editResponse(${formIndex}, ${response.id})">Editar Respuesta</button>
-<button onclick="showNestedAnswerInput(${formIndex}, ${response.id})">
-<i class="fa fa-reply"></i> Responder
-</button>
-</div>
 <div id="nestedAnswerInput${formIndex}-${response.id}" class="answer-input" style="display: none;">
 <textarea id="nestedAnswer${formIndex}-${response.id}" placeholder="Escribe tu respuesta"></textarea>
 <button onclick="submitNestedAnswer(${formIndex}, ${response.id})">Enviar Respuesta</button>
