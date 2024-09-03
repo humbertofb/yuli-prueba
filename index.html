@@ -216,7 +216,7 @@
 
                 try {
                     const { error } = await supabaseClient
-                        .from('question0')  // Cambia esto si quieres insertar en una tabla específica
+                        .from('question0') // O la tabla que corresponda
                         .insert([{ name, question }]);
 
                     if (error) throw error;
@@ -243,7 +243,6 @@
                 }
             };
 
-            // Función para enviar respuesta
             window.submitAnswer = async function(formIndex, questionId) {
                 const answer = document.getElementById(`answer${formIndex}-${questionId}`).value;
                 try {
@@ -257,6 +256,39 @@
                     initializeForm(formIndex);
                 } catch (error) {
                     console.error('Error al enviar la respuesta:', error);
+                }
+            };
+
+            // Funciones para editar y eliminar preguntas
+            window.deleteQuestion = async function(formIndex, questionId) {
+                try {
+                    const { error } = await supabaseClient
+                        .from(`question${formIndex}`)
+                        .delete()
+                        .eq('id', questionId);
+
+                    if (error) throw error;
+
+                    initializeForm(formIndex);
+                } catch (error) {
+                    console.error('Error al eliminar la pregunta:', error);
+                }
+            };
+
+            window.editQuestion = async function(formIndex, questionId, fieldType) {
+                const element = document.querySelector(`.question[data-id="${questionId}"] .${fieldType}-text`);
+                const newValue = element.textContent;
+                try {
+                    const { error } = await supabaseClient
+                        .from(`question${formIndex}`)
+                        .update({ [fieldType]: newValue })
+                        .eq('id', questionId);
+
+                    if (error) throw error;
+
+                    initializeForm(formIndex);
+                } catch (error) {
+                    console.error('Error al editar la pregunta:', error);
                 }
             };
 
