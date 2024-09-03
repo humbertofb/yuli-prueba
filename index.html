@@ -64,7 +64,7 @@ return;
 async function initializeForm(formIndex) {
 try {
 const { data: questions, error } = await supabaseClient
-.from(`questions${formIndex}`)
+.from(`question${formIndex}`)
 .select('*');
 
 if (error) throw error;
@@ -104,14 +104,14 @@ const question = document.getElementById('question').value;
 
 try {
 const { error } = await supabaseClient
-.from('questions')
+.from('question0')  // Cambia esto si quieres insertar en una tabla específica
 .insert([{ name, question }]);
 
 if (error) throw error;
 
 document.getElementById('name').value = '';
 document.getElementById('question').value = '';
-initializeForm(0);
+initializeForm(0);  // Inicializa el primer formulario después de insertar
 } catch (error) {
 console.error('Error al enviar la pregunta:', error);
 }
@@ -124,7 +124,7 @@ initializeForm(i);
 window.deleteQuestion = async function(formIndex, id) {
 try {
 const { error } = await supabaseClient
-.from(`questions${formIndex}`)
+.from(`question${formIndex}`)
 .delete()
 .eq('id', id);
 
@@ -152,7 +152,7 @@ questionText.addEventListener('blur', async function() {
 const newValue = questionText.innerText;
 try {
 const { error } = await supabaseClient
-.from(`questions${formIndex}`)
+.from(`question${formIndex}`)
 .update({ question: newValue })
 .eq('id', id);
 
@@ -169,7 +169,7 @@ answerText.addEventListener('blur', async function() {
 const newValue = answerText.innerText;
 try {
 const { error } = await supabaseClient
-.from(`questions${formIndex}`)
+.from(`question${formIndex}`)
 .update({ answer: newValue })
 .eq('id', id);
 
@@ -192,7 +192,7 @@ const answer = document.getElementById(`answer${formIndex}-${id}`).value;
 if (answer) {
 try {
 const { error } = await supabaseClient
-.from(`questions${formIndex}`)
+.from(`question${formIndex}`)
 .update({ answer })
 .eq('id', id);
 
