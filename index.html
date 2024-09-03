@@ -1,393 +1,270 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Juego de preguntas y respuestas</title>
-<link rel="stylesheet" href="styles.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<style>
-/* Estilo general del cuerpo */
-body {
-font-family: Arial, sans-serif;
-background-color: #f4f4f4;
-margin: 0;
-padding: 20px;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego de preguntas y respuestas</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        /* Estilo general del cuerpo */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
 
-header {
-background-color: #4CAF50;
-padding: 10px;
-color: white;
-text-align: center;
-}
+        header {
+            background-color: #4CAF50;
+            padding: 10px;
+            color: white;
+            text-align: center;
+        }
 
-/* Estilo del contenedor principal */
-.forms-container {
-margin-top: 20px;
-}
+        /* Estilo del contenedor principal */
+        .forms-container {
+            margin-top: 20px;
+        }
 
-.styled-container {
-background-color: white;
-border: 1px solid #ddd;
-border-radius: 8px;
-padding: 15px;
-margin-bottom: 15px;
-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+        .styled-container {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
 
-/* Botón de guardar */
-.save-button {
-background-color: #4CAF50;
-color: white;
-border: none;
-padding: 5px 10px;
-cursor: pointer;
-margin-left: 5px;
-}
+        /* Botón de guardar */
+        .save-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            margin-left: 5px;
+        }
 
-.save-button:hover {
-background-color: #45a049;
-}
+        .save-button:hover {
+            background-color: #45a049;
+        }
 
-/* Estilo de cuadro editable */
-[contenteditable="true"] {
-border: 2px solid #4CAF50;
-background-color: #f9f9f9;
-padding: 5px;
-}
+        /* Estilo de cuadro editable */
+        [contenteditable="true"] {
+            border: 2px solid #4CAF50;
+            background-color: #f9f9f9;
+            padding: 5px;
+        }
 
-.question-buttons {
-margin-top: 10px;
-}
+        .question-buttons {
+            margin-top: 10px;
+        }
 
-.answer-input {
-margin-top: 10px;
-}
+        .answer-input {
+            margin-top: 10px;
+            display: none; /* Oculto por defecto */
+            transition: max-height 0.3s ease, opacity 0.3s ease;
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+        }
 
-.answer-text {
-background-color: #f1f1f1;
-padding: 10px;
-border-radius: 5px;
-}
+        .answer-input.show {
+            display: block; /* Mostrar el contenedor */
+            max-height: 200px; /* Altura suficiente para el textarea y el botón */
+            opacity: 1;
+        }
 
-.fa-reply {
-margin-right: 5px;
-}
+        .answer-text {
+            background-color: #f1f1f1;
+            padding: 10px;
+            border-radius: 5px;
+        }
 
-/* Respuestas anidadas */
-.nested-response {
-margin-left: 20px;
-background-color: #e9e9e9;
-padding: 10px;
-border-radius: 5px;
-}
-</style>
+        .fa-reply {
+            margin-right: 5px;
+        }
+
+        /* Respuestas anidadas */
+        .nested-response {
+            margin-left: 20px;
+            background-color: #e9e9e9;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 <body>
-<header>
-<h2>Preguntas y respuestas</h2>
-</header>
+    <header>
+        <h2>Preguntas y respuestas</h2>
+    </header>
 
-<main>
-<h1>Juego de Preguntas y Respuestas</h1>
-<form id="questionForm">
-<input type="text" id="name" placeholder="Escribe tu nombre" required>
-<textarea id="question" placeholder="Escribe tu pregunta" required></textarea>
-<button type="submit">Enviar</button>
-</form>
-<div class="forms-container">
-<!-- Repetir el formulario cinco veces -->
-<div id="questionsContainer0" class="styled-container"></div>
-<div id="questionsContainer1" class="styled-container"></div>
-<div id="questionsContainer2" class="styled-container"></div>
-<div id="questionsContainer3" class="styled-container"></div>
-<div id="questionsContainer4" class="styled-container"></div>
-</div>
-</main>
+    <main>
+        <h1>Juego de Preguntas y Respuestas</h1>
+        <form id="questionForm">
+            <input type="text" id="name" placeholder="Escribe tu nombre" required>
+            <textarea id="question" placeholder="Escribe tu pregunta" required></textarea>
+            <button type="submit">Enviar</button>
+        </form>
+        <div class="forms-container">
+            <!-- Repetir el formulario cinco veces -->
+            <div id="questionsContainer0" class="styled-container"></div>
+            <div id="questionsContainer1" class="styled-container"></div>
+            <div id="questionsContainer2" class="styled-container"></div>
+            <div id="questionsContainer3" class="styled-container"></div>
+            <div id="questionsContainer4" class="styled-container"></div>
+        </div>
+    </main>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js" defer></script>
 
-<script>
-document.addEventListener('DOMContentLoaded', async function() {
-if (typeof supabase === 'undefined' || typeof supabase.createClient === 'undefined') {
-console.error('Error: La biblioteca de Supabase no se ha cargado correctamente.');
-return;
-}
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            if (typeof supabase === 'undefined' || typeof supabase.createClient === 'undefined') {
+                console.error('Error: La biblioteca de Supabase no se ha cargado correctamente.');
+                return;
+            }
 
-const supabaseUrl = 'https://bfjimcvsknmxaanhmayc.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJmamltY3Zza25teGFhbmhtYXljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjUxNDIyMzcsImV4cCI6MjA0MDcxODIzN30.jVrklsT3FHaq8Hxzmg6GXlE6dp14ELqHCG7NjOA7muI';
+            const supabaseUrl = 'https://bfjimcvsknmxaanhmayc.supabase.co';
+            const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJmamltY3Zza25teGFhbmhtYXljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjUxNDIyMzcsImV4cCI6MjA0MDcxODIzN30.jVrklsT3FHaq8Hxzmg6GXlE6dp14ELqHCG7NjOA7muI';
 
-let supabaseClient;
+            let supabaseClient;
 
-try {
-supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
-} catch (error) {
-console.error('Error al inicializar Supabase:', error);
-return;
-}
+            try {
+                supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+            } catch (error) {
+                console.error('Error al inicializar Supabase:', error);
+                return;
+            }
 
-async function initializeForm(formIndex) {
-    try {
-        const { data: questions, error } = await supabaseClient
-            .from(`question${formIndex}`)
-            .select('*');
+            async function initializeForm(formIndex) {
+                try {
+                    const { data: questions, error } = await supabaseClient
+                        .from(`question${formIndex}`)
+                        .select('*');
 
-        if (error) throw error;
+                    if (error) throw error;
 
-        const questionsContainer = document.getElementById(`questionsContainer${formIndex}`);
-        questionsContainer.innerHTML = '';
-        questions.forEach((question) => {
-            const div = document.createElement('div');
-            div.className = 'question';
+                    const questionsContainer = document.getElementById(`questionsContainer${formIndex}`);
+                    questionsContainer.innerHTML = '';
+                    questions.forEach((question) => {
+                        const div = document.createElement('div');
+                        div.className = 'question';
 
-            // Solo muestra la respuesta si existe
-            const answerHTML = question.answer ? `<p><strong>Respuesta:</strong> <span class="answer-text" contenteditable="false">${question.answer}</span></p>` : '';
+                        // Solo muestra la respuesta si existe
+                        const answerHTML = question.answer ? `<p><strong>Respuesta:</strong> <span class="answer-text" contenteditable="false">${question.answer}</span></p>` : '';
 
-            div.innerHTML = `
-                <p><strong>${question.name}</strong>: <span class="question-text" contenteditable="false">${question.question}</span></p>
-                ${answerHTML}
-                <div class="question-buttons">
-                    <button onclick="deleteQuestion(${formIndex}, ${question.id})">Eliminar</button>
-                    <button onclick="editQuestion(${formIndex}, ${question.id}, 'question')">Editar Pregunta</button>
-                    ${question.answer ? `<button onclick="editQuestion(${formIndex}, ${question.id}, 'answer')">Editar Respuesta</button>` : ''}
-                    ${!question.answer ? `<button id="responder" onclick="showAnswerInput(${formIndex}, ${question.id})">
-                    <i class="fa fa-reply"></i> Responder
-                    </button>` : ''}
-                </div>
-                <div id="answerInput${formIndex}-${question.id}" class="answer-input" style="display: none;">
-                    <textarea id="answer${formIndex}-${question.id}" placeholder="Escribe tu respuesta"></textarea>
-                    <button onclick="submitAnswer(${formIndex}, ${question.id})">Enviar Respuesta</button>
-                </div>
-                <div id="nestedResponses${formIndex}-${question.id}" class="nested-response"></div>
-            `;
-            questionsContainer.appendChild(div);
-
-            // Inicializar respuestas anidadas solo si existen
-            if (question.responses && question.responses.length > 0) {
-                question.responses.forEach(response => {
-                    const nestedDiv = document.createElement('div');
-                    nestedDiv.className = 'nested-response';
-                    nestedDiv.innerHTML = `
-                        <p><strong>${response.name}</strong>: <span class="answer-text" contenteditable="false">${response.response}</span></p>
-                        <div class="question-buttons">
-                            <button onclick="showNestedAnswerInput(${formIndex}, ${response.id})">
+                        div.innerHTML = `
+                            <p><strong>${question.name}</strong>: <span class="question-text" contenteditable="false">${question.question}</span></p>
+                            ${answerHTML}
+                            <div class="question-buttons">
+                                <button onclick="deleteQuestion(${formIndex}, ${question.id})">Eliminar</button>
+                                <button onclick="editQuestion(${formIndex}, ${question.id}, 'question')">Editar Pregunta</button>
+                                ${question.answer ? `<button onclick="editQuestion(${formIndex}, ${question.id}, 'answer')">Editar Respuesta</button>` : ''}
+                                ${!question.answer ? `<button id="responder" onclick="showAnswerInput(${formIndex}, ${question.id})">
                                 <i class="fa fa-reply"></i> Responder
-                            </button>
-                            <button onclick="deleteResponse(${formIndex}, ${response.id})">Eliminar</button>
-                            <button onclick="editResponse(${formIndex}, ${response.id})">Editar Respuesta</button>
-                        </div>
-                        <div id="nestedAnswerInput${formIndex}-${response.id}" class="answer-input" style="display: none;">
-                            <textarea id="nestedAnswer${formIndex}-${response.id}" placeholder="Escribe tu respuesta"></textarea>
-                            <button onclick="submitNestedAnswer(${formIndex}, ${response.id})">Enviar Respuesta</button>
-                        </div>
-                    `;
-                    document.getElementById(`nestedResponses${formIndex}-${question.id}`).appendChild(nestedDiv);
-                });
+                                </button>` : ''}
+                            </div>
+                            <div id="answerInput${formIndex}-${question.id}" class="answer-input">
+                                <textarea id="answer${formIndex}-${question.id}" placeholder="Escribe tu respuesta"></textarea>
+                                <button onclick="submitAnswer(${formIndex}, ${question.id})">Enviar Respuesta</button>
+                            </div>
+                            <div id="nestedResponses${formIndex}-${question.id}" class="nested-response"></div>
+                        `;
+                        questionsContainer.appendChild(div);
+
+                        // Inicializar respuestas anidadas solo si existen
+                        if (question.responses && question.responses.length > 0) {
+                            question.responses.forEach(response => {
+                                const nestedDiv = document.createElement('div');
+                                nestedDiv.className = 'nested-response';
+                                nestedDiv.innerHTML = `
+                                    <p><strong>${response.name}</strong>: <span class="answer-text" contenteditable="false">${response.response}</span></p>
+                                    <div class="question-buttons">
+                                        <button onclick="showNestedAnswerInput(${formIndex}, ${response.id})">
+                                            <i class="fa fa-reply"></i> Responder
+                                        </button>
+                                        <button onclick="deleteResponse(${formIndex}, ${response.id})">Eliminar</button>
+                                        <button onclick="editResponse(${formIndex}, ${response.id})">Editar Respuesta</button>
+                                    </div>
+                                    <div id="nestedAnswerInput${formIndex}-${response.id}" class="answer-input">
+                                        <textarea id="nestedAnswer${formIndex}-${response.id}" placeholder="Escribe tu respuesta"></textarea>
+                                        <button onclick="submitNestedAnswer(${formIndex}, ${response.id})">Enviar Respuesta</button>
+                                    </div>
+                                `;
+                                document.getElementById(`nestedResponses${formIndex}-${question.id}`).appendChild(nestedDiv);
+                            });
+                        }
+                    });
+
+                    // Ocultar contenedor si no hay respuestas
+                    if (questions.length === 0) {
+                        questionsContainer.style.display = 'none';
+                    } else {
+                        questionsContainer.style.display = 'block';
+                    }
+                } catch (error) {
+                    console.error('Error al inicializar el formulario:', error);
+                }
+            }
+
+            document.getElementById('questionForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const name = document.getElementById('name').value;
+                const question = document.getElementById('question').value;
+
+                try {
+                    const { error } = await supabaseClient
+                        .from('question0')  // Cambia esto si quieres insertar en una tabla específica
+                        .insert([{ name, question }]);
+
+                    if (error) throw error;
+
+                    document.getElementById('name').value = '';
+                    document.getElementById('question').value = '';
+                    initializeForm(0);  // Inicializa de nuevo el primer formulario (o el que corresponda)
+                } catch (error) {
+                    console.error('Error al enviar la pregunta:', error);
+                }
+            });
+
+            window.showAnswerInput = function(formIndex, id) {
+                const answerInput = document.getElementById(`answerInput${formIndex}-${id}`);
+                if (answerInput) {
+                    answerInput.classList.add('show');
+                }
+            };
+
+            window.showNestedAnswerInput = function(formIndex, id) {
+                const nestedAnswerInput = document.getElementById(`nestedAnswerInput${formIndex}-${id}`);
+                if (nestedAnswerInput) {
+                    nestedAnswerInput.classList.add('show');
+                }
+            };
+
+            // Función para enviar respuesta
+            window.submitAnswer = async function(formIndex, questionId) {
+                const answer = document.getElementById(`answer${formIndex}-${questionId}`).value;
+                try {
+                    const { error } = await supabaseClient
+                        .from(`question${formIndex}`)
+                        .update({ answer })
+                        .eq('id', questionId);
+
+                    if (error) throw error;
+
+                    initializeForm(formIndex);
+                } catch (error) {
+                    console.error('Error al enviar la respuesta:', error);
+                }
+            };
+
+            // Inicializar todos los formularios al cargar la página
+            for (let i = 0; i < 5; i++) {
+                initializeForm(i);
             }
         });
-
-        // Ocultar contenedor si no hay respuestas
-        if (questions.length === 0) {
-            questionsContainer.style.display = 'none';
-        } else {
-            questionsContainer.style.display = 'block';
-        }
-    } catch (error) {
-        console.error('Error al inicializar el formulario:', error);
-    }
-}
-
-document.getElementById('questionForm').addEventListener('submit', async function(e) {
-e.preventDefault();
-const name = document.getElementById('name').value;
-const question = document.getElementById('question').value;
-
-try {
-const { error } = await supabaseClient
-.from('question0')  // Cambia esto si quieres insertar en una tabla específica
-.insert([{ name, question }]);
-
-if (error) throw error;
-
-document.getElementById('name').value = '';
-document.getElementById('question').value = '';
-initializeForm(0);  // Inicializa el primer formulario después de insertar
-} catch (error) {
-console.error('Error al enviar la pregunta:', error);
-}
-});
-
-for (let i = 0; i < 5; i++) {
-initializeForm(i);
-}
-
-window.deleteQuestion = async function(formIndex, id) {
-try {
-const { error } = await supabaseClient
-.from(`question${formIndex}`)
-.delete()
-.eq('id', id);
-
-if (error) throw error;
-
-initializeForm(formIndex);
-} catch (error) {
-console.error('Error al eliminar la pregunta:', error);
-}
-};
-
-window.editQuestion = function(formIndex, id, type) {
-const questionText = document.querySelector(`#questionsContainer${formIndex} .question-text`);
-const answerText = document.querySelector(`#questionsContainer${formIndex} .answer-text`);
-const saveButton = document.createElement('button');
-
-// Añadir botón "Guardar" que aparece solo cuando se edita
-saveButton.textContent = "Guardar";
-saveButton.style.display = 'none';  // Inicialmente oculto
-saveButton.className = 'save-button';
-const questionButtons = document.querySelector(`#questionsContainer${formIndex} .question-buttons`);
-questionButtons.appendChild(saveButton);
-
-if (type === 'question') {
-questionText.contentEditable = true;
-questionText.focus();
-saveButton.style.display = 'inline';
-} else if (type === 'answer') {
-answerText.contentEditable = true;
-answerText.focus();
-saveButton.style.display = 'inline';
-}
-
-saveButton.addEventListener('click', async function() {
-const newValue = type === 'question' ? questionText.innerText : answerText.innerText;
-try {
-const updateData = type === 'question' ? { question: newValue } : { answer: newValue };
-const { error } = await supabaseClient
-.from(`question${formIndex}`)
-.update(updateData)
-.eq('id', id);
-
-if (error) throw error;
-
-// Confirmación visual
-saveButton.textContent = "Guardado";
-setTimeout(() => {
-saveButton.style.display = 'none';  // Ocultar botón después de guardar
-saveButton.textContent = "Guardar";  // Restaurar el texto del botón
-}, 2000);
-
-questionText.contentEditable = false;
-answerText.contentEditable = false;
-initializeForm(formIndex);
-} catch (error) {
-console.error(`Error al editar ${type}:`, error);
-}
-});
-};
-
-window.showAnswerInput = function(formIndex, id) {
-const answerInput = document.getElementById(`answerInput${formIndex}-${id}`);
-answerInput.style.display = 'block';
-};
-
-window.submitAnswer = async function(formIndex, id) {
-const answerTextarea = document.getElementById(`answer${formIndex}-${id}`);
-const answer = answerTextarea.value;
-
-try {
-const { error } = await supabaseClient
-.from(`question${formIndex}`)
-.update({ answer })
-.eq('id', id);
-
-if (error) throw error;
-
-answerTextarea.value = '';
-initializeForm(formIndex);
-} catch (error) {
-console.error('Error al enviar la respuesta:', error);
-}
-};
-
-window.showNestedAnswerInput = function(formIndex, id) {
-const nestedAnswerInput = document.getElementById(`nestedAnswerInput${formIndex}-${id}`);
-nestedAnswerInput.style.display = 'block';
-};
-
-window.submitNestedAnswer = async function(formIndex, parentResponseId) {
-const nestedAnswerTextarea = document.getElementById(`nestedAnswer${formIndex}-${parentResponseId}`);
-const nestedAnswer = nestedAnswerTextarea.value;
-
-try {
-const { error } = await supabaseClient
-.from('responses')
-.insert([{ parent_response_id: parentResponseId, response: nestedAnswer }]);
-
-if (error) throw error;
-
-nestedAnswerTextarea.value = '';
-initializeForm(formIndex);
-} catch (error) {
-console.error('Error al enviar la respuesta anidada:', error);
-}
-};
-
-window.deleteResponse = async function(formIndex, id) {
-try {
-const { error } = await supabaseClient
-.from('responses')
-.delete()
-.eq('id', id);
-
-if (error) throw error;
-
-initializeForm(formIndex);
-} catch (error) {
-console.error('Error al eliminar la respuesta:', error);
-}
-};
-
-window.editResponse = function(formIndex, id) {
-const responseText = document.querySelector(`#nestedResponses${formIndex}-${id} .answer-text`);
-const saveButton = document.createElement('button');
-
-// Añadir botón "Guardar" que aparece solo cuando se edita
-saveButton.textContent = "Guardar";
-saveButton.style.display = 'none';  // Inicialmente oculto
-saveButton.className = 'save-button';
-const responseButtons = document.querySelector(`#nestedResponses${formIndex}-${id} .question-buttons`);
-responseButtons.appendChild(saveButton);
-
-responseText.contentEditable = true;
-responseText.focus();
-saveButton.style.display = 'inline';
-
-saveButton.addEventListener('click', async function() {
-const newValue = responseText.innerText;
-try {
-const { error } = await supabaseClient
-.from('responses')
-.update({ response: newValue })
-.eq('id', id);
-
-if (error) throw error;
-
-// Confirmación visual
-saveButton.textContent = "Guardado";
-setTimeout(() => {
-saveButton.style.display = 'none';  // Ocultar botón después de guardar
-saveButton.textContent = "Guardar";  // Restaurar el texto del botón
-}, 2000);
-
-responseText.contentEditable = false;
-initializeForm(formIndex);
-} catch (error) {
-console.error('Error al editar la respuesta:', error);
-}
-});
-};
-});
-</script>
+    </script>
 </body>
 </html>
