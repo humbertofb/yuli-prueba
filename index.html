@@ -132,9 +132,13 @@
                     questions.forEach((question) => {
                         const div = document.createElement('div');
                         div.className = 'question';
+
+                        // Solo muestra la respuesta si existe
+                        const answerHTML = question.answer ? `<p><strong>Respuesta:</strong> <span class="answer-text" contenteditable="false">${question.answer}</span></p>` : '';
+
                         div.innerHTML = `
                             <p><strong>${question.name}</strong>: <span class="question-text" contenteditable="false">${question.question}</span></p>
-                            ${question.answer ? `<p><strong>Respuesta:</strong> <span class="answer-text" contenteditable="false">${question.answer}</span></p>` : ''}
+                            ${answerHTML}
                             <div class="question-buttons">
                                 <button onclick="deleteQuestion(${formIndex}, ${question.id})">Eliminar</button>
                                 <button onclick="editQuestion(${formIndex}, ${question.id}, 'question')">Editar Pregunta</button>
