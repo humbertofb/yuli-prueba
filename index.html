@@ -169,7 +169,7 @@ question.responses.forEach(response => {
 const nestedDiv = document.createElement('div');
 nestedDiv.className = 'nested-response';
 nestedDiv.innerHTML = `
-<p><strong>${response.name}</strong>: <span class="answer-text" contenteditable="false">${response.answer}</span></p>
+<p><strong>${response.name}</strong>: <span class="answer-text" contenteditable="false">${response.response}</span></p>
 <div class="question-buttons">
 <button onclick="deleteResponse(${formIndex}, ${response.id})">Eliminar</button>
 <button onclick="editResponse(${formIndex}, ${response.id})">Editar Respuesta</button>
