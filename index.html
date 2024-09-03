@@ -173,12 +173,20 @@ nestedDiv.innerHTML = `
 <div class="question-buttons">
 <button onclick="deleteResponse(${formIndex}, ${response.id})">Eliminar</button>
 <button onclick="editResponse(${formIndex}, ${response.id})">Editar Respuesta</button>
+<button onclick="showNestedAnswerInput(${formIndex}, ${response.id})">
+<i class="fa fa-reply"></i> Responder
+</button>
+</div>
+<div id="nestedAnswerInput${formIndex}-${response.id}" class="answer-input" style="display: none;">
+<textarea id="nestedAnswer${formIndex}-${response.id}" placeholder="Escribe tu respuesta"></textarea>
+<button onclick="submitNestedAnswer(${formIndex}, ${response.id})">Enviar Respuesta</button>
 </div>
 `;
 document.getElementById(`nestedResponses${formIndex}-${question.id}`).appendChild(nestedDiv);
 });
 }
 });
+
 // Ocultar contenedor si no hay respuestas
 if (questions.length === 0) {
 questionsContainer.style.display = 'none';
@@ -209,7 +217,6 @@ initializeForm(0);  // Inicializa el primer formulario después de insertar
 console.error('Error al enviar la pregunta:', error);
 }
 });
-
 for (let i = 0; i < 5; i++) {
 initializeForm(i);
 }
@@ -302,10 +309,33 @@ console.error('Error al enviar la respuesta:', error);
 }
 };
 
+window.showNestedAnswerInput = function(formIndex, id) {
+const nestedAnswerInput = document.getElementById(`nestedAnswerInput${formIndex}-${id}`);
+nestedAnswerInput.style.display = 'block';
+};
+
+window.submitNestedAnswer = async function(formIndex, parentResponseId) {
+const nestedAnswerTextarea = document.getElementById(`nestedAnswer${formIndex}-${parentResponseId}`);
+const nestedAnswer = nestedAnswerTextarea.value;
+
+try {
+const { error } = await supabaseClient
+.from('responses')
+.insert([{ parent_response_id: parentResponseId, response: nestedAnswer }]);
+
+if (error) throw error;
+
+nestedAnswerTextarea.value = '';
+initializeForm(formIndex);
+} catch (error) {
+console.error('Error al enviar la respuesta anidada:', error);
+}
+};
+
 window.deleteResponse = async function(formIndex, id) {
 try {
 const { error } = await supabaseClient
-.from(`response${formIndex}`)
+.from('responses')
 .delete()
 .eq('id', id);
 
@@ -336,8 +366,8 @@ saveButton.addEventListener('click', async function() {
 const newValue = responseText.innerText;
 try {
 const { error } = await supabaseClient
-.from(`response${formIndex}`)
-.update({ answer: newValue })
+.from('responses')
+.update({ response: newValue })
 .eq('id', id);
 
 if (error) throw error;
