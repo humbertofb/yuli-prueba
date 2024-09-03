@@ -179,7 +179,6 @@ document.getElementById(`nestedResponses${formIndex}-${question.id}`).appendChil
 });
 }
 });
-
 // Ocultar contenedor si no hay respuestas
 if (questions.length === 0) {
 questionsContainer.style.display = 'none';
@@ -229,6 +228,7 @@ initializeForm(formIndex);
 console.error('Error al eliminar la pregunta:', error);
 }
 };
+
 window.editQuestion = function(formIndex, id, type) {
 const questionText = document.querySelector(`#questionsContainer${formIndex} .question-text`);
 const answerText = document.querySelector(`#questionsContainer${formIndex} .answer-text`);
