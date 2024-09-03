@@ -74,6 +74,14 @@
         .fa-reply {
             margin-right: 5px;
         }
+
+        /* Respuestas anidadas */
+        .nested-response {
+            margin-left: 20px;
+            background-color: #e9e9e9;
+            padding: 10px;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -213,11 +221,11 @@
                 if (type === 'question') {
                     questionText.contentEditable = true;
                     questionText.focus();
-                    saveButton.style.display = 'inline-block'; // Mostrar botón "Guardar" al editar
+                    saveButton.style.display = 'inline';
                 } else if (type === 'answer') {
                     answerText.contentEditable = true;
                     answerText.focus();
-                    saveButton.style.display = 'inline-block'; // Mostrar botón "Guardar" al editar
+                    saveButton.style.display = 'inline';
                 }
 
                 saveButton.addEventListener('click', async function() {
@@ -234,8 +242,8 @@
                         // Confirmación visual
                         saveButton.textContent = "Guardado";
                         setTimeout(() => {
-                            saveButton.style.display = 'none'; // Ocultar botón después de guardar
-                            saveButton.textContent = "Guardar"; // Restaurar el texto del botón
+                            saveButton.style.display = 'none';  // Ocultar botón después de guardar
+                            saveButton.textContent = "Guardar";  // Restaurar el texto del botón
                         }, 2000);
 
                         questionText.contentEditable = false;
