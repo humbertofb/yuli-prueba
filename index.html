@@ -159,8 +159,25 @@ ${!question.answer ? `<button id="responder" onclick="showAnswerInput(${formInde
 <textarea id="answer${formIndex}-${question.id}" placeholder="Escribe tu respuesta"></textarea>
 <button onclick="submitAnswer(${formIndex}, ${question.id})">Enviar Respuesta</button>
 </div>
+<div id="nestedResponses${formIndex}-${question.id}" class="nested-response"></div>
 `;
 questionsContainer.appendChild(div);
+
+// Inicializar respuestas anidadas
+if (question.responses) {
+question.responses.forEach(response => {
+const nestedDiv = document.createElement('div');
+nestedDiv.className = 'nested-response';
+nestedDiv.innerHTML = `
+<p><strong>${response.name}</strong>: <span class="answer-text" contenteditable="false">${response.answer}</span></p>
+<div class="question-buttons">
+<button onclick="deleteResponse(${formIndex}, ${response.id})">Eliminar</button>
+<button onclick="editResponse(${formIndex}, ${response.id})">Editar Respuesta</button>
+</div>
+`;
+document.getElementById(`nestedResponses${formIndex}-${question.id}`).appendChild(nestedDiv);
+});
+}
 });
 
 // Ocultar contenedor si no hay respuestas
@@ -212,7 +229,6 @@ initializeForm(formIndex);
 console.error('Error al eliminar la pregunta:', error);
 }
 };
-
 window.editQuestion = function(formIndex, id, type) {
 const questionText = document.querySelector(`#questionsContainer${formIndex} .question-text`);
 const answerText = document.querySelector(`#questionsContainer${formIndex} .answer-text`);
@@ -224,6 +240,7 @@ saveButton.style.display = 'none';  // Inicialmente oculto
 saveButton.className = 'save-button';
 const questionButtons = document.querySelector(`#questionsContainer${formIndex} .question-buttons`);
 questionButtons.appendChild(saveButton);
+
 if (type === 'question') {
 questionText.contentEditable = true;
 questionText.focus();
@@ -283,6 +300,61 @@ initializeForm(formIndex);
 } catch (error) {
 console.error('Error al enviar la respuesta:', error);
 }
+};
+
+window.deleteResponse = async function(formIndex, id) {
+try {
+const { error } = await supabaseClient
+.from(`response${formIndex}`)
+.delete()
+.eq('id', id);
+
+if (error) throw error;
+
+initializeForm(formIndex);
+} catch (error) {
+console.error('Error al eliminar la respuesta:', error);
+}
+};
+
+window.editResponse = function(formIndex, id) {
+const responseText = document.querySelector(`#nestedResponses${formIndex}-${id} .answer-text`);
+const saveButton = document.createElement('button');
+
+// Añadir botón "Guardar" que aparece solo cuando se edita
+saveButton.textContent = "Guardar";
+saveButton.style.display = 'none';  // Inicialmente oculto
+saveButton.className = 'save-button';
+const responseButtons = document.querySelector(`#nestedResponses${formIndex}-${id} .question-buttons`);
+responseButtons.appendChild(saveButton);
+
+responseText.contentEditable = true;
+responseText.focus();
+saveButton.style.display = 'inline';
+
+saveButton.addEventListener('click', async function() {
+const newValue = responseText.innerText;
+try {
+const { error } = await supabaseClient
+.from(`response${formIndex}`)
+.update({ answer: newValue })
+.eq('id', id);
+
+if (error) throw error;
+
+// Confirmación visual
+saveButton.textContent = "Guardado";
+setTimeout(() => {
+saveButton.style.display = 'none';  // Ocultar botón después de guardar
+saveButton.textContent = "Guardar";  // Restaurar el texto del botón
+}, 2000);
+
+responseText.contentEditable = false;
+initializeForm(formIndex);
+} catch (error) {
+console.error('Error al editar la respuesta:', error);
+}
+});
 };
 });
 </script>
