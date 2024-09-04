@@ -162,8 +162,9 @@
                                 <button onclick="deleteQuestion(${formIndex}, ${question.id})">Eliminar</button>
                                 <button onclick="editQuestion(${formIndex}, ${question.id}, 'question')">Editar Pregunta</button>
                                 ${question.answer ? `<button onclick="editQuestion(${formIndex}, ${question.id}, 'answer')">Editar Respuesta</button>` : ''}
-                                ${!question.answer ? `<button id="responder" onclick="showAnswerInput(${formIndex}, ${question.id})">
-                                <i class="fa fa-reply"></i> Responder
+                                ${question.answer === null || question.answer === undefined ? `
+                                <button id="responder" onclick="showAnswerInput(${formIndex}, ${question.id})">
+                                    <i class="fa fa-reply"></i> Responder
                                 </button>` : ''}
                             </div>
                             <div id="answerInput${formIndex}-${question.id}" class="answer-input">
@@ -221,45 +222,12 @@
 
                     if (error) throw error;
 
-                    document.getElementById('name').value = '';
-                    document.getElementById('question').value = '';
-                    initializeForm(0);  // Inicializa de nuevo el primer formulario (o el que corresponda)
+                    initializeForm(0);
                 } catch (error) {
                     console.error('Error al enviar la pregunta:', error);
                 }
             });
 
-            window.showAnswerInput = function(formIndex, id) {
-                const answerInput = document.getElementById(`answerInput${formIndex}-${id}`);
-                if (answerInput) {
-                    answerInput.classList.add('show');
-                }
-            };
-
-            window.showNestedAnswerInput = function(formIndex, id) {
-                const nestedAnswerInput = document.getElementById(`nestedAnswerInput${formIndex}-${id}`);
-                if (nestedAnswerInput) {
-                    nestedAnswerInput.classList.add('show');
-                }
-            };
-
-            window.submitAnswer = async function(formIndex, questionId) {
-                const answer = document.getElementById(`answer${formIndex}-${questionId}`).value;
-                try {
-                    const { error } = await supabaseClient
-                        .from(`question${formIndex}`)
-                        .update({ answer })
-                        .eq('id', questionId);
-
-                    if (error) throw error;
-
-                    initializeForm(formIndex);
-                } catch (error) {
-                    console.error('Error al enviar la respuesta:', error);
-                }
-            };
-
-            // Funciones para editar y eliminar preguntas
             window.deleteQuestion = async function(formIndex, questionId) {
                 try {
                     const { error } = await supabaseClient
@@ -275,24 +243,139 @@
                 }
             };
 
-            window.editQuestion = async function(formIndex, questionId, fieldType) {
-                const element = document.querySelector(`.question[data-id="${questionId}"] .${fieldType}-text`);
-                const newValue = element.textContent;
+            window.editQuestion = function(formIndex, questionId, field) {
+                const questionText = document.querySelector(`#questionsContainer${formIndex} .question-text`);
+                const answerText = document.querySelector(`#questionsContainer${formIndex} .answer-text`);
+
+                if (field === 'question') {
+                    questionText.contentEditable = true;
+                    questionText.focus();
+                } else if (field === 'answer' && answerText) {
+                    answerText.contentEditable = true;
+                    answerText.focus();
+                }
+
+                questionText.addEventListener('blur', async function() {
+                    const newQuestion = questionText.innerText;
+
+                    try {
+                        const { error } = await supabaseClient
+                            .from(`question${formIndex}`)
+                            .update({ question: newQuestion })
+                            .eq('id', questionId);
+
+                        if (error) throw error;
+
+                        questionText.contentEditable = false;
+                    } catch (error) {
+                        console.error('Error al editar la pregunta:', error);
+                    }
+                });
+
+                if (answerText) {
+                    answerText.addEventListener('blur', async function() {
+                        const newAnswer = answerText.innerText;
+
+                        try {
+                            const { error } = await supabaseClient
+                                .from(`question${formIndex}`)
+                                .update({ answer: newAnswer })
+                                .eq('id', questionId);
+
+                            if (error) throw error;
+
+                            answerText.contentEditable = false;
+                        } catch (error) {
+                            console.error('Error al editar la respuesta:', error);
+                        }
+                    });
+                }
+            };
+
+            window.showAnswerInput = function(formIndex, questionId) {
+                const answerInput = document.getElementById(`answerInput${formIndex}-${questionId}`);
+                answerInput.classList.toggle('show');
+            };
+
+            window.submitAnswer = async function(formIndex, questionId) {
+                const answer = document.getElementById(`answer${formIndex}-${questionId}`).value;
+
                 try {
                     const { error } = await supabaseClient
                         .from(`question${formIndex}`)
-                        .update({ [fieldType]: newValue })
+                        .update({ answer })
                         .eq('id', questionId);
 
                     if (error) throw error;
 
                     initializeForm(formIndex);
                 } catch (error) {
-                    console.error('Error al editar la pregunta:', error);
+                    console.error('Error al enviar la respuesta:', error);
                 }
             };
 
-            // Inicializar todos los formularios al cargar la página
+            window.showNestedAnswerInput = function(formIndex, responseId) {
+                const nestedAnswerInput = document.getElementById(`nestedAnswerInput${formIndex}-${responseId}`);
+                nestedAnswerInput.classList.toggle('show');
+            };
+
+            window.submitNestedAnswer = async function(formIndex, responseId) {
+                const nestedAnswer = document.getElementById(`nestedAnswer${formIndex}-${responseId}`).value;
+
+                try {
+                    const { error } = await supabaseClient
+                        .from(`question${formIndex}`)
+                        .update({ responses: [...responses, { response: nestedAnswer }] })
+                        .eq('id', responseId);
+
+                    if (error) throw error;
+
+                    initializeForm(formIndex);
+                } catch (error) {
+                    console.error('Error al enviar la respuesta anidada:', error);
+                }
+            };
+
+            window.deleteResponse = async function(formIndex, responseId) {
+                try {
+                    const { error } = await supabaseClient
+                        .from(`question${formIndex}`)
+                        .delete()
+                        .eq('id', responseId);
+
+                    if (error) throw error;
+
+                    initializeForm(formIndex);
+                } catch (error) {
+                    console.error('Error al eliminar la respuesta:', error);
+                }
+            };
+
+            window.editResponse = function(formIndex, responseId) {
+                const nestedResponseText = document.querySelector(`#nestedResponses${formIndex} .answer-text`);
+
+                nestedResponseText.contentEditable = true;
+                nestedResponseText.focus();
+
+                nestedResponseText.addEventListener('blur', async function() {
+                    const newResponse = nestedResponseText.innerText;
+
+                    try {
+                        const { error } = await supabaseClient
+                            .from(`question${formIndex}`)
+                            .update({ responses: responses.map(response => response.id === responseId ? { ...response, response: newResponse } : response) })
+                            .eq('id', responseId);
+
+                        if (error) throw error;
+
+                        nestedResponseText.contentEditable = false;
+                    } catch (error) {
+                        console.error('Error al editar la respuesta anidada:', error);
+                    }
+                });
+            };
+
+            // Inicializar formularios
             for (let i = 0; i < 5; i++) {
                 initializeForm(i);
             }
