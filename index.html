@@ -334,40 +334,45 @@ async function deleteQuestion(formIndex, questionId) {
     try {
         const { data, error } = await supabaseClient
             .from('question0')
-            .insert([{ name, question }]);
+            .insert([{ name, question }])
+            .select(); // Asegura que estás recibiendo los datos insertados de vuelta
 
         if (error) throw error;
 
-        const newQuestion = data[0]; // La pregunta recién insertada
+        // Verifica si data contiene un valor válido antes de acceder a él
+        if (data && data.length > 0) {
+            const newQuestion = data[0]; // La pregunta recién insertada
 
-        // Añadir la nueva pregunta al DOM directamente
-        const questionsContainer = document.getElementById('questionsContainer0');
-        const div = document.createElement('div');
-        div.className = 'question';
+            // Añadir la nueva pregunta al DOM directamente
+            const questionsContainer = document.getElementById('questionsContainer0');
+            const div = document.createElement('div');
+            div.className = 'question';
 
-        div.innerHTML = `
-            <p><strong>${newQuestion.name}</strong>: <span class="question-text" contenteditable="false">${newQuestion.question}</span></p>
-            <div class="question-buttons">
-                <button class="delete-button" data-form-index="0" data-id="${newQuestion.id}">Eliminar</button>
-                <button class="edit-question-button" data-form-index="0" data-id="${newQuestion.id}" data-field="question">Editar Pregunta</button>
-                <button class="reply-button" data-form-index="0" data-id="${newQuestion.id}">
-                    <i class="fa fa-reply"></i> Responder
-                </button>
-            </div>
-            <div id="answerInput0-${newQuestion.id}" class="answer-input">
-                <textarea id="answer0-${newQuestion.id}" placeholder="Escribe tu respuesta"></textarea>
-                <button class="submit-answer-button" data-form-index="0" data-id="${newQuestion.id}">Enviar Respuesta</button>
-            </div>
-            <div id="nestedResponses0-${newQuestion.id}" class="nested-response"></div>
-        `;
+            div.innerHTML = `
+                <p><strong>${newQuestion.name}</strong>: <span class="question-text" contenteditable="false">${newQuestion.question}</span></p>
+                <div class="question-buttons">
+                    <button class="delete-button" data-form-index="0" data-id="${newQuestion.id}">Eliminar</button>
+                    <button class="edit-question-button" data-form-index="0" data-id="${newQuestion.id}" data-field="question">Editar Pregunta</button>
+                    <button class="reply-button" data-form-index="0" data-id="${newQuestion.id}">
+                        <i class="fa fa-reply"></i> Responder
+                    </button>
+                </div>
+                <div id="answerInput0-${newQuestion.id}" class="answer-input">
+                    <textarea id="answer0-${newQuestion.id}" placeholder="Escribe tu respuesta"></textarea>
+                    <button class="submit-answer-button" data-form-index="0" data-id="${newQuestion.id}">Enviar Respuesta</button>
+                </div>
+                <div id="nestedResponses0-${newQuestion.id}" class="nested-response"></div>
+            `;
 
-        questionsContainer.appendChild(div);
-        questionsContainer.style.display = 'block';
+            questionsContainer.appendChild(div);
+            questionsContainer.style.display = 'block';
 
-        // Limpiar el formulario de entrada
-        document.getElementById('name').value = '';
-        document.getElementById('question').value = '';
-
+            // Limpiar el formulario de entrada
+            document.getElementById('name').value = '';
+            document.getElementById('question').value = '';
+        } else {
+            throw new Error('No se ha recibido la pregunta insertada desde la base de datos.');
+        }
     } catch (error) {
         console.error('Error al enviar la pregunta:', error);
         alert('Ocurrió un error al enviar la pregunta.');
