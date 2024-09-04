@@ -268,21 +268,21 @@ async function deleteQuestion(formIndex, questionId) {
     }
 }
             // Función para editar una pregunta o respuesta
-            function editQuestion(formIndex, questionId, field) {
-                const element = document.querySelector(`.edit-${field}-button[data-id="${questionId}"]`).previousElementSibling.querySelector('span');
-                element.contentEditable = true;
-                element.focus();
-                element.classList.add('editing');
+            window.editQuestion = async function(formIndex, questionId, fieldType) {
+    // Encuentra el elemento basado en su ID y tipo de campo
+    const element = document.querySelector(`.question[data-id="${questionId}"] .${fieldType}-text`);
 
-                element.addEventListener('blur', async () => {
-                    const newValue = element.innerText;
-                    try {
-                        const { error } = await supabaseClient
-                            .from(`question${formIndex}`)
-                            .update({ [field]: newValue })
-                            .eq('id', questionId);
+    // Verificar si el elemento existe antes de intentar modificarlo
+    if (element) {
+        const newValue = element.textContent;
 
-                        if (error) throw error;
+        try {
+            const { error } = await supabaseClient
+                .from(`question${formIndex}`)
+                .update({ [fieldType]: newValue })
+                .eq('id', questionId);
+
+            if (error) throw error;
 
                         element.contentEditable = false;
                         element.classList.remove('editing');
