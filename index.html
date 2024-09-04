@@ -290,7 +290,7 @@ async function deleteQuestion(formIndex, questionId) {
                         console.error(`Error al editar la ${field}:`, error);
                         alert(`Ocurrió un error al editar la ${field}.`);
                     }
-                }, { once: true });
+                { once: true });
             }
 
             // Función para mostrar/ocultar el campo de respuesta
