@@ -241,22 +241,32 @@
             });
 
             // Función para eliminar una pregunta
-            async function deleteQuestion(formIndex, questionId) {
-                try {
-                    const { error } = await supabaseClient
-                        .from(`question${formIndex}`)
-                        .delete()
-                        .eq('id', questionId);
+async function deleteQuestion(formIndex, questionId) {
+    try {
+        const { error } = await supabaseClient
+            .from(`question${formIndex}`)
+            .delete()
+            .eq('id', questionId);
 
-                    if (error) throw error;
+        if (error) throw error;
 
-                    document.querySelector(`.delete-button[data-id="${questionId}"]`).closest('.question').remove();
-                } catch (error) {
-                    console.error('Error al eliminar la pregunta:', error);
-                    alert('Ocurrió un error al eliminar la pregunta.');
-                }
-            }
+        // Eliminar la pregunta del DOM
+        const questionDiv = document.querySelector(`.delete-button[data-id="${questionId}"]`).closest('.question');
+        if (questionDiv) {
+            questionDiv.remove();
+        }
 
+        // Revisar si quedan preguntas en el contenedor, si no ocultar el contenedor
+        const questionsContainer = document.getElementById(`questionsContainer${formIndex}`);
+        if (questionsContainer && questionsContainer.children.length === 0) {
+            questionsContainer.style.display = 'none';
+        }
+
+    } catch (error) {
+        console.error('Error al eliminar la pregunta:', error);
+        alert('Ocurrió un error al eliminar la pregunta.');
+    }
+}
             // Función para editar una pregunta o respuesta
             function editQuestion(formIndex, questionId, field) {
                 const element = document.querySelector(`.edit-${field}-button[data-id="${questionId}"]`).previousElementSibling.querySelector('span');
@@ -317,34 +327,53 @@
 
             // Evento para enviar una nueva pregunta
             document.getElementById('questionForm').addEventListener('submit', async function(event) {
-                event.preventDefault();
-                const name = document.getElementById('name').value;
-                const question = document.getElementById('question').value;
+    event.preventDefault();
+    const name = document.getElementById('name').value;
+    const question = document.getElementById('question').value;
 
-                try {
-                    const { data: question0, error } = await supabaseClient
-                        .from('question0')
-                        .insert({ name, question })
-                        .select();
+    try {
+        const { data, error } = await supabaseClient
+            .from('question0')
+            .insert([{ name, question }]);
 
-                    if (error) throw error;
+        if (error) throw error;
 
-                    // Actualizar el contenedor de preguntas
-                    updateQuestionsContainer([...document.querySelectorAll('#questionsContainer0 .question')].map(div => ({
-                        id: parseInt(div.querySelector('.delete-button').dataset.id),
-                        name: div.querySelector('strong').innerText,
-                        question: div.querySelector('.question-text').innerText,
-                        answer: div.querySelector('.answer-text')?.innerText || ''
-                    })), 0);
+        const newQuestion = data[0]; // La pregunta recién insertada
 
-                    document.getElementById('name').value = '';
-                    document.getElementById('question').value = '';
-                } catch (error) {
-                    console.error('Error al enviar la pregunta:', error);
-                    alert('Ocurrió un error al enviar la pregunta.');
-                }
-            });
-        });
-    </script>
+        // Añadir la nueva pregunta al DOM directamente
+        const questionsContainer = document.getElementById('questionsContainer0');
+        const div = document.createElement('div');
+        div.className = 'question';
+
+        div.innerHTML = `
+            <p><strong>${newQuestion.name}</strong>: <span class="question-text" contenteditable="false">${newQuestion.question}</span></p>
+            <div class="question-buttons">
+                <button class="delete-button" data-form-index="0" data-id="${newQuestion.id}">Eliminar</button>
+                <button class="edit-question-button" data-form-index="0" data-id="${newQuestion.id}" data-field="question">Editar Pregunta</button>
+                <button class="reply-button" data-form-index="0" data-id="${newQuestion.id}">
+                    <i class="fa fa-reply"></i> Responder
+                </button>
+            </div>
+            <div id="answerInput0-${newQuestion.id}" class="answer-input">
+                <textarea id="answer0-${newQuestion.id}" placeholder="Escribe tu respuesta"></textarea>
+                <button class="submit-answer-button" data-form-index="0" data-id="${newQuestion.id}">Enviar Respuesta</button>
+            </div>
+            <div id="nestedResponses0-${newQuestion.id}" class="nested-response"></div>
+        `;
+
+        questionsContainer.appendChild(div);
+        questionsContainer.style.display = 'block';
+
+        // Limpiar el formulario de entrada
+        document.getElementById('name').value = '';
+        document.getElementById('question').value = '';
+
+    } catch (error) {
+        console.error('Error al enviar la pregunta:', error);
+        alert('Ocurrió un error al enviar la pregunta.');
+    }
+});
+});
+</script>
 </body>
 </html>
